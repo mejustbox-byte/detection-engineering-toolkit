@@ -9,7 +9,7 @@
 | Atomic | GUID/platform/schema, show/execute gating | Конкретная upstream procedure в VM | not_run |
 | Offline events | positive/negative/case/missing fields | Достоверность telemetry и ingestion | not_run |
 | Packaging | frozen install, build, wheel smoke | Windows/macOS clean install | not_run |
-| CI | Валидный подготовленный workflow | Удалённый exact-HEAD Linux/Windows Actions | not_run |
+| CI | Валидный подготовленный workflow | Удалённый exact-HEAD Linux/Windows Actions | pass |
 
 ## Критерии
 

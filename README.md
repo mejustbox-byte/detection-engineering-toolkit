@@ -2,7 +2,7 @@
 
 Инструмент detection engineering: воспроизводимая цепочка ATT&CK → наблюдаемый сценарий → Sigma → запрос SIEM → план Atomic Red Team → доказательства проверки.
 
-Версия разработки **0.1.0a1**. Реализован offline CLI; публичный репозиторий создан: https://github.com/mejustbox-byte/detection-engineering-toolkit . Удалённый CI и публикация Cloud-среды пока ожидают проверки. Реальные Atomic/SIEM-проверки **НЕ ВЫПОЛНЕНЫ**.
+Версия **0.1.0a1** — экспериментальный offline CLI. Поддерживаются четыре Windows Discovery сценария. Реальные Atomic/SIEM-проверки **НЕ ВЫПОЛНЕНЫ**; границы верификации описаны в [VERIFICATION.md](VERIFICATION.md).
 
 ## Что работает
 
