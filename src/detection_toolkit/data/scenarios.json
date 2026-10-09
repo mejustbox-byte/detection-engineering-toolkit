@@ -1,0 +1,51 @@
+[
+  {
+    "id": "whoami",
+    "technique": "T1033",
+    "name": "Обнаружение текущего пользователя через whoami.exe",
+    "attack_name": "System Owner/User Discovery",
+    "image": "\\whoami.exe",
+    "contains": [],
+    "falsepositives": [
+      "Инвентаризация и диагностические скрипты",
+      "Ручная диагностика администратором"
+    ]
+  },
+  {
+    "id": "hostname",
+    "technique": "T1082",
+    "name": "Обнаружение имени системы через hostname.exe",
+    "attack_name": "System Information Discovery",
+    "image": "\\hostname.exe",
+    "contains": [],
+    "falsepositives": [
+      "Диагностика подключения",
+      "Сбор инвентаризации"
+    ]
+  },
+  {
+    "id": "ipconfig",
+    "technique": "T1016",
+    "name": "Обнаружение сетевых настроек через ipconfig /all",
+    "attack_name": "System Network Configuration Discovery",
+    "image": "\\ipconfig.exe",
+    "contains": [
+      "/all"
+    ],
+    "falsepositives": [
+      "Диагностика сетевых проблем",
+      "Служебные скрипты инвентаризации"
+    ]
+  },
+  {
+    "id": "tasklist",
+    "technique": "T1057",
+    "name": "Обнаружение процессов через tasklist.exe",
+    "attack_name": "Process Discovery",
+    "image": "\\tasklist.exe",
+    "contains": [],
+    "falsepositives": [
+      "Мониторинг и диагностика процессов"
+    ]
+  }
+]
