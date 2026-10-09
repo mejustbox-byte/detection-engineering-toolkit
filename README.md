@@ -1,6 +1,6 @@
 # Detection Engineering Toolkit
 
-Флагманский проект GITHUB-OPSEC: воспроизводимая цепочка ATT&CK → наблюдаемый сценарий → Sigma → запрос SIEM → план Atomic Red Team → доказательства проверки.
+Инструмент detection engineering: воспроизводимая цепочка ATT&CK → наблюдаемый сценарий → Sigma → запрос SIEM → план Atomic Red Team → доказательства проверки.
 
 Версия разработки **0.1.0a1**. Реализован offline CLI; публичный репозиторий создан: https://github.com/mejustbox-byte/detection-engineering-toolkit . Удалённый CI и публикация Cloud-среды пока ожидают проверки. Реальные Atomic/SIEM-проверки **НЕ ВЫПОЛНЕНЫ**.
 
@@ -37,7 +37,7 @@ uv run --frozen detkit validate T1033 --cases output/whoami/fixtures.json
 - [Установка](INSTALL.md), [разработка](CONTRIBUTING.md), [эксплуатация](RUNBOOK.md), [Cloud](CLOUD-DEVELOPMENT.md).
 - [Локальный стенд](LOCAL-PC.md), [матрица проверок](VALIDATION.md), [фактические проверки](VERIFICATION.md).
 - [План развития](ROADMAP.md), [выпуск](RELEASE.md), [чеклист](RELEASE-CHECKLIST.md), [заметки](RELEASE-NOTES.md), [изменения](CHANGELOG.md).
-- [Источники и происхождение](SOURCES.md), [демонстрация для портфолио](PORTFOLIO.md).
+- [Источники и происхождение](SOURCES.md), [демонстрационный сценарий](DEMO.md).
 
 ## Ограничения
 

@@ -1,31 +1,34 @@
-# Облачная разработка
+# Облачная среда разработки
 
-## Назначение
+## Конфигурация
 
-Имя среды: `detection-engineering-toolkit`. Публичный GitHub repository: `mejustbox-byte/detection-engineering-toolkit`. Репозиторий создан 2026-10-09; public visibility и права записи подтверждены. Публикация среды проверяется отдельно.
+Репозиторий: https://github.com/mejustbox-byte/detection-engineering-toolkit .
+Ветка по умолчанию: `main`. Имя среды: `detection-engineering-toolkit`.
+Runtime: CPython 3.12.15 и uv 0.12.23. Зависимости закреплены в uv.lock.
 
-Локально в текущей рабочей среде подготовлен CPython 3.12.15, uv.lock и свежий venv. Это не публикация облачной среды в настройках ChatGPT.
+Среда предназначена для разработки offline CLI, синтетических тестов и упаковки. Реальные Windows/Atomic/SIEM проверки выполняются на отдельном стенде по [LOCAL-PC.md](LOCAL-PC.md).
 
 ## Установка из checkout
 
-install_script должен исполняться из корня фактического checkout:
+Рабочий каталог — корень репозитория. При первоначальной установке нужен доступ к официальным Python/uv источникам и PyPI. При запуске продукт не требует сети или credentials.
 
 ```bash
 set -euo pipefail
 uv sync --frozen --extra dev
 uv run --frozen --extra dev pytest -q
 uv run --frozen --extra dev ruff check .
+uv run --frozen --extra dev ruff format --check .
 uv run --frozen detkit list
 ```
 
-Не используйте пути предыдущих сессий или `/workspace/onboarding`. Python 3.12.15 и uv 0.12.23 обеспечиваются базовым образом/официальным установщиком. При установке требуется PyPI; runtime offline. Credentials для SIEM/Atomic отсутствуют.
+## Рабочий цикл
 
-## Инструкция запуска работы
+Перед изменениями изучите REQUIREMENTS, THREAT-MODEL и CORE-CONTRACT. Выполните тесты и оба backend regression checks. После изменений обновите документацию, соберите wheel/sdist и проверьте wheel вне checkout.
 
-«Работай в актуальном checkout detection-engineering-toolkit. Сначала прочитай README, REQUIREMENTS, THREAT-MODEL, CORE-CONTRACT и VERIFICATION. Реализуй согласованные сценарии, обнови русские документы, проверь frozen install, pytest, lint, сборку и wheel вне checkout. Не запускай Atomic автоматически. Реальные SIEM/Windows проверки отдельно; synthetic pass их не заменяет. Используй штатное GitHub подключение; не извлекай credentials. До публикации результатов проверь точный commit и удалённый CI».
+Команды и пути должны разрешаться относительно текущего checkout. Сохранённый venv не заменяет чистую установку. Не сохраняйте реальные журналы и credentials в репозитории. Atomic-планы остаются данными; автоматический запуск отсутствует.
 
-## Публикация и восстановление
+## Проверка сохранённой конфигурации
 
-Перед публикацией среды: подтвердить repo ID/branch, сохранившиеся install/start инструкции, сетевые зависимости без секретов и успешное восстановление в новой задаче. После публикации открыть среду заново и проверить checkout/commit. Существующий venv не является доказательством воспроизводимости.
+После публикации среды откройте её повторно, проверьте привязку репозитория и воспроизведите frozen install в новой задаче. Установка и стартовые инструкции должны соответствовать текущим scripts/setup.sh и CONTRIBUTING.md.
 
-Удалённый CI и публикация среды отмечаются отдельно в VERIFICATION. Пока подготовленный workflow не запускался на GitHub. Среда не должна ждать ветку другого проекта GITHUB-OPSEC.
+Удалённый CI проверяется для точного commit отдельно от установки среды. Фактические результаты и ограничения перечислены в [VERIFICATION.md](VERIFICATION.md).
