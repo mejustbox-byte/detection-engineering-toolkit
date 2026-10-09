@@ -1,6 +1,6 @@
-# Заметки к подготовленной версии 0.1.0a1
+# Detection Engineering Toolkit 0.1.0a1
 
-Локальная предварительная версия; публичного выпуска ещё нет.
+Первый предварительный выпуск offline CLI. Правила имеют статус experimental; выпуск предназначен для лабораторной оценки.
 
 Добавлены четыре Discovery сценария Windows: T1033/whoami, T1082/hostname, T1016/ipconfig /all, T1057/tasklist. CLI формирует experimental Sigma, SPL/KQL, synthetic fixtures, validation report, конкретный GUID-план Atomic и SHA256 manifest.
 
