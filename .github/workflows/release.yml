@@ -3,12 +3,16 @@ on:
   workflow_dispatch:
     inputs:
       commit:
-        description: 'Проверенный полный SHA коммита main'
+        description: 'Full verified main commit SHA'
         required: true
+      tag:
+        description: 'New prerelease tag matching the package version'
+        required: true
+        default: v0.1.0a2
 permissions:
   contents: read
 concurrency:
-  group: release-v0.1.0a1
+  group: release-${{ inputs.tag }}
   cancel-in-progress: false
 jobs:
   build:
@@ -18,31 +22,44 @@ jobs:
         with:
           ref: ${{ inputs.commit }}
           fetch-depth: 0
-      - name: Проверка коммита и версии
-        env:
-          EXPECTED_SHA: ${{ inputs.commit }}
-        run: |
-          test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
-          test "$(git rev-parse origin/main)" = "$EXPECTED_SHA"
-          python -c 'import tomllib; assert tomllib.load(open("pyproject.toml", "rb"))["project"]["version"] == "0.1.0a1"'
       - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
+      - name: Verify source and version
+        env:
+          EXPECTED_SHA: ${{ inputs.commit }}
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: |
+          python - <<'PY'
+          import os, re, subprocess, tomllib
+          sha = os.environ['EXPECTED_SHA']
+          assert re.fullmatch(r'[0-9a-f]{40}', sha), 'Full commit SHA required'
+          for ref in ('HEAD', 'origin/main'):
+              assert subprocess.check_output(['git', 'rev-parse', ref], text=True).strip() == sha
+          version = tomllib.load(open('pyproject.toml', 'rb'))['project']['version']
+          assert re.fullmatch(r'\d+\.\d+\.\d+a\d+', version), 'Only alpha prereleases supported'
+          assert os.environ['RELEASE_TAG'] == 'v' + version
+          PY
       - run: python -m pip install uv==0.12.23
       - run: uv sync --frozen --extra dev
       - run: uv run --frozen --extra dev pytest -q
       - run: uv run --frozen --extra dev ruff check .
+      - run: uv run --frozen --extra dev ruff format --check .
+      - run: uv run --frozen detkit doctor
       - run: uv build
-      - name: Проверка установки wheel вне checkout
+      - name: Install wheel outside checkout
         run: |
           python -m venv /tmp/detkit-wheel
           /tmp/detkit-wheel/bin/pip install dist/*.whl
           cd /tmp
-          /tmp/detkit-wheel/bin/detkit list
+          /tmp/detkit-wheel/bin/detkit doctor
           /tmp/detkit-wheel/bin/detkit bundle T1033 --output /tmp/detkit-smoke
-      - name: Архив и SHA256
+          /tmp/detkit-wheel/bin/detkit verify-bundle /tmp/detkit-smoke
+      - name: Archive and checksums
+        env:
+          RELEASE_TAG: ${{ inputs.tag }}
         run: |
-          git archive --format=zip --prefix=detection-engineering-toolkit/ HEAD -o dist/detection-engineering-toolkit-0.1.0a1-source.zip
+          git archive --format=zip --prefix=detection-engineering-toolkit/ HEAD -o "dist/detection-engineering-toolkit-${RELEASE_TAG#v}-source.zip"
           cp RELEASE-NOTES.md dist/RELEASE-NOTES.md
           cd dist
           sha256sum *.whl *.tar.gz *.zip RELEASE-NOTES.md > SHA256SUMS
@@ -60,14 +77,17 @@ jobs:
         with:
           name: release-assets
           path: dist
-      - name: Публикация неизменяемого тега и prerelease
+      - name: Create new tag and prerelease; verify downloaded assets
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
           RELEASE_SHA: ${{ inputs.commit }}
+          RELEASE_TAG: ${{ inputs.tag }}
         run: |
-          gh release create v0.1.0a1 dist/* --target "$RELEASE_SHA" --title 'Detection Engineering Toolkit 0.1.0a1' --notes-file dist/RELEASE-NOTES.md --prerelease
+          test "$(gh api "repos/$GH_REPO/commits/main" --jq .sha)" = "$RELEASE_SHA"
+          gh api --method POST "repos/$GH_REPO/git/refs" -f "ref=refs/tags/$RELEASE_TAG" -f "sha=$RELEASE_SHA"
+          gh release create "$RELEASE_TAG" dist/* --verify-tag --title "Detection Engineering Toolkit ${RELEASE_TAG#v}" --notes-file dist/RELEASE-NOTES.md --prerelease
           mkdir downloaded
-          gh release download v0.1.0a1 --dir downloaded
+          gh release download "$RELEASE_TAG" --dir downloaded
           cd downloaded
           sha256sum --check SHA256SUMS

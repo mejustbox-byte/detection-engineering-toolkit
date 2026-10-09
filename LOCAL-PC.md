@@ -1,27 +1,33 @@
-# Реальная лаборатория на локальном ПК
+# Лаборатория на локальном ПК
 
 ## Стенд
 
-Одноразовая Windows VM с snapshot и явно согласованным владельцем; Sysmon process creation для Splunk либо onboarded Defender endpoint для DeviceProcessEvents; разрешённый SIEM workspace. На macOS Intel используйте отдельный доступный Windows x86-64 стенд; конкретный hypervisor выбирает оператор. Контейнер Linux не доказывает Windows telemetry.
+Используйте отдельную Windows VM со snapshot, контролируемой сетью, рабочим источником process creation и отдельными тестовыми учётными записями. Для Windows событий подходят соответствующим образом настроенные Sysmon Event ID 1 или Security 4688; сбор CommandLine для 4688 нужно включать отдельно. Для Defender требуется onboarding устройства и доставка DeviceProcessEvents. macOS/Linux могут строить пакет, но не заменяют Windows стенд.
 
-## Подготовка
+## Телеметрия и запросы
 
-Запишите OS/build, time sync, Sysmon config hash либо Defender onboarding, SIEM версии, таблицы, fields и index. Возьмите Atomic Red Team и Invoke-AtomicRedTeam из официальных источников, зафиксируйте оба commit. Прочитайте procedure и dependencies; автоматического GetPrereqs нет. Snapshot создаётся до теста; проверяется возможность отката.
+| Цель | Поля и проверка |
+|---|---|
+| Splunk | Убедитесь, что Windows process events имеют `Image`/`CommandLine`; ограничьте index, sourcetype, host и интервал времени согласно локальному deployment |
+| Defender | Откройте Advanced Hunting; проверьте `DeviceProcessEvents`, `FileName`/`FolderPath`/`ProcessCommandLine` и устройство |
+
+Проверьте фактический сгенерированный запрос: pipeline может менять имена полей. Не добавляйте field aliases без проверки исходного события. Отсутствие результата может означать отсутствие телеметрии, задержку доставки или несовпадение схемы.
 
 ## Протокол одного сценария
 
-1. Создайте bundle и проверьте hashes. Запишите ATT&CK ID, scenario, UUID правила и версии dependencies.
-2. Выполните `atomic-list` на локальном YAML. Выберите Windows GUID, чья процедура действительно использует наблюдаемый процесс/аргумент. Не используйте весь список техники.
-3. Сверьте input arguments, elevation и cleanup. В плане SHA256 должен совпасть с файлом установленного Atomic checkout.
-4. В согласованной VM выполните ShowDetails и CheckPrereqs по плану. Наличие зависимостей ещё не означает запуск теста.
-5. Согласуйте окно UTC, host scope и изменения. Сформируйте execute с `--lab-ack`; выполните вручную только выбранный GUID. Зафиксируйте начало, конец, stdout/stderr и исходный endpoint event.
-6. Проверьте ingestion: event поступил, Image/CommandLine mapping совпал, timestamp находится в окне. Отсутствующий raw event — проблема телеметрии, не доказательство качества правила.
-7. Выполните подготовленный SPL/KQL с ограниченным scope. Сохраните query hash, raw event ID, результат и latency. Backend conversion сама по себе не подтверждает valid query в вашей версии SIEM.
-8. Проверьте отрицательные случаи и типичный легитимный шум. Discovery правила могут совпадать на легитимной диагностике; фиксируйте это как ожидаемые false positives.
-9. Выполните reviewed cleanup, затем восстановите snapshot и проверьте состояние. Заполните verdict: pass/fail/unknown/not_run с причиной.
+1. Запишите commit Toolkit, Python/backend версии, Windows build, версии сенсора/SIEM.
+2. Закрепите upstream Atomic commit, путь YAML и Windows GUID; сохраните SHA256.
+3. Сделайте snapshot. Просмотрите test command, defaults, elevated права, prerequisites и cleanup. Не устанавливайте prerequisites автоматически без ревью.
+4. Постройте пакет, выполните `verify-bundle`; просмотрите Sigma/SPL/KQL и соответствие выбранному тесту.
+5. Через ShowDetails и CheckPrereqs проверьте readiness. Укажите правильный `PathToAtomicsFolder` в Invoke-AtomicRedTeam отдельно от пути YAML Toolkit.
+6. Запишите UTC начало/окончание и вручную выполните один одобренный тест в VM. Toolkit его не запускает.
+7. Сохраните локально исходное событие и Event ID/Record ID либо Defender timestamp/device ID. Установите факт доставки в SIEM.
+8. Выполните запрос в ограниченном временном окне; подтвердите совпадение конкретного события и запишите задержку.
+9. Выполните негативный случай с другой утилитой и легитимный совпадающий случай. Последний показывает false positive, а не поломку правила.
+10. Выполните проверенный cleanup и убедитесь в восстановлении состояния; при необходимости верните snapshot.
 
-## Шаблон доказательства
+## Результат
 
-Поля: scenario, ATT&CK ID, правило SHA256, backend/pipeline/version, Atomic GUID/YAML SHA256/upstream commits, VM snapshot, OS, UTC interval, raw event reference, query SHA256, matches, negative results, latency, cleanup verification, reviewer и verdict. Реальные данные хранятся приватно; в git включается синтетический аналог.
+Запишите `pass`, `fail` или `not_run` отдельно для execution, telemetry delivery, query match, negative case и cleanup. Для `fail` укажите наблюдение и шаг воспроизведения. Реальные события и host/user identifiers остаются вне публичного репозитория. Публикуйте только обезличенный отчёт и синтетические примеры.
 
-Все перечисленные реальные проверки на дату подготовки **НЕ ВЫПОЛНЕНЫ**. Отчёт offline_scope нельзя копировать как результат SIEM.
+Реальные лабораторные результаты этого проекта пока не получены. Работающие Linux/Windows offline тесты их не заменяют.

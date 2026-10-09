@@ -5,13 +5,17 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+import sys
 from datetime import date
+from importlib.metadata import version
 from importlib.resources import files
 from pathlib import Path
 from uuid import NAMESPACE_URL, UUID, uuid5
 
 import yaml
 from sigma.collection import SigmaCollection
+
+from . import __version__
 
 MAX_BYTES = 8 * 1024 * 1024
 TECHNIQUE = re.compile(r"T\d{4}(?:\.\d{3})?\Z")
@@ -21,16 +25,34 @@ class InputError(ValueError):
     """Ошибка пользовательских данных."""
 
 
-def load_file(path: Path, kind: str):
+def read_bytes(path: Path) -> bytes:
     with path.open("rb") as stream:
         data = stream.read(MAX_BYTES + 1)
     if len(data) > MAX_BYTES:
         raise InputError("Размер входа превышает 8 MiB")
+    return data
+
+
+def parse_bytes(data: bytes, kind: str):
     try:
         raw = data.decode("utf-8")
         return json.loads(raw) if kind == "json" else yaml.safe_load(raw)
     except (UnicodeError, ValueError, yaml.YAMLError, RecursionError) as exc:
         raise InputError("Некорректный UTF-8 / JSON / YAML") from exc
+
+
+def load_file(path: Path, kind: str):
+    return parse_bytes(read_bytes(path), kind)
+
+
+def convert_file(path: Path, target: str) -> list[str]:
+    try:
+        rule = read_bytes(path).decode("utf-8")
+    except UnicodeError as exc:
+        raise InputError("Sigma input must be UTF-8") from exc
+    if not rule.strip():
+        raise InputError("Sigma input is empty")
+    return convert(rule, target)
 
 
 def scenarios() -> list[dict]:
@@ -75,7 +97,12 @@ def generate_rule(scenario: dict) -> str:
 
 def convert(rule: str, target: str) -> list[str]:
     # Каждый backend получает свежую коллекцию: pipeline изменяет правила.
-    collection = SigmaCollection.from_yaml(rule)
+    try:
+        collection = SigmaCollection.from_yaml(rule)
+    except yaml.YAMLError as exc:
+        raise InputError("Invalid or unsafe Sigma YAML") from exc
+    if not collection.rules:
+        raise InputError("Sigma input contains no detection rules")
     if target == "splunk":
         from sigma.backends.splunk import SplunkBackend
         from sigma.pipelines.splunk import splunk_windows_pipeline
@@ -92,9 +119,12 @@ def convert(rule: str, target: str) -> list[str]:
 
 
 def atomic_tests(path: Path, technique: str) -> list[dict]:
+    return _atomic_tests(load_file(path, "yaml"), technique)
+
+
+def _atomic_tests(data: object, technique: str) -> list[dict]:
     if not TECHNIQUE.fullmatch(technique):
         raise InputError("Некорректный ID техники")
-    data = load_file(path, "yaml")
     if not isinstance(data, dict) or data.get("attack_technique") != technique:
         raise InputError("Atomic YAML относится к другой технике")
     tests = data.get("atomic_tests")
@@ -124,6 +154,18 @@ def atomic_tests(path: Path, technique: str) -> list[dict]:
             or any(not isinstance(p, str) for p in platforms)
         ):
             raise InputError("Неполное описание Atomic test")
+        if type(executor.get("elevation_required", False)) is not bool:
+            raise InputError("elevation_required must be boolean")
+        if "cleanup_command" in executor and not isinstance(executor["cleanup_command"], str):
+            raise InputError("cleanup_command must be a string")
+        if not isinstance(item.get("input_arguments", {}), dict) or not isinstance(
+            item.get("dependencies", []), list
+        ):
+            raise InputError("Invalid Atomic arguments or dependencies")
+        try:
+            json.dumps(item, allow_nan=False)
+        except (TypeError, ValueError, RecursionError) as exc:
+            raise InputError("Atomic metadata must be JSON-compatible and acyclic") from exc
         result.append(
             {
                 "guid": guid,
@@ -131,6 +173,7 @@ def atomic_tests(path: Path, technique: str) -> list[dict]:
                 "platforms": platforms,
                 "executor": executor["name"],
                 "command": executor["command"],
+                "cleanup_command": executor.get("cleanup_command"),
                 "elevation_required": executor.get("elevation_required", False),
                 "input_arguments": item.get("input_arguments", {}),
                 "dependencies": item.get("dependencies", []),
@@ -139,19 +182,30 @@ def atomic_tests(path: Path, technique: str) -> list[dict]:
     return result
 
 
-def atomic_plan(path: Path, technique: str, guid: str, lab_ack: bool) -> dict:
+def atomic_plan(
+    path: Path, technique: str, guid: str, lab_ack: bool, source_commit: str | None = None
+) -> dict:
+    if source_commit is not None and not re.fullmatch(r"[0-9a-fA-F]{40}", source_commit):
+        raise InputError("Atomic source commit must be a full 40-character SHA")
     try:
         normalized = str(UUID(guid))
     except (ValueError, TypeError, AttributeError) as exc:
         raise InputError("Некорректный GUID") from exc
-    selected = [t for t in atomic_tests(path, technique) if t["guid"] == normalized]
+    snapshot = read_bytes(path)
+    selected = [
+        t
+        for t in _atomic_tests(parse_bytes(snapshot, "yaml"), technique)
+        if t["guid"] == normalized
+    ]
     if len(selected) != 1 or "windows" not in selected[0]["platforms"]:
         raise InputError("GUID не найден или тест не поддерживает Windows")
     prefix = f"Invoke-AtomicTest {technique} -TestGuids {normalized}"
     result = {
         "technique": technique,
         "test": selected[0],
-        "atomic_yaml_sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+        "atomic_yaml_sha256": hashlib.sha256(snapshot).hexdigest(),
+        "source_commit": source_commit.lower() if source_commit else None,
+        "source_provenance": "user_supplied_unverified" if source_commit else "not_provided",
         "coverage": "manual_review_required",
         "execution": "not_run",
         "show_details": prefix + " -ShowDetails",
@@ -249,6 +303,7 @@ def bundle(
     atomic: Path | None = None,
     guid: str | None = None,
     lab_ack: bool = False,
+    source_commit: str | None = None,
 ) -> Path:
     scenario = scenario_for(technique)
     rule = generate_rule(scenario)
@@ -263,8 +318,10 @@ def bundle(
         raise InputError("--atomic-file и --test-guid задаются вместе")
     if lab_ack and atomic is None:
         raise InputError("--lab-ack требует конкретного Atomic test")
+    if source_commit and atomic is None:
+        raise InputError("--atomic-commit requires --atomic-file and --test-guid")
     plan = (
-        atomic_plan(atomic, technique, guid, lab_ack)
+        atomic_plan(atomic, technique, guid, lab_ack, source_commit)
         if atomic
         else {"execution": "not_run", "reason": "Atomic YAML и GUID не предоставлены"}
     )
@@ -276,9 +333,14 @@ def bundle(
         "Splunk: Windows process_creation, проверьте source/sourcetype/index и Image/CommandLine. "
         "Defender: DeviceProcessEvents, проверьте onboarding и доставку событий.\n\n"
         "План Atomic требует ручной проверки процедуры и её соответствия условию правила.\n"
+        "\n## English\n\nExperimental rule for a narrow Windows Discovery scenario. "
+        "Synthetic cases passed; SIEM and Atomic execution: **NOT RUN**. "
+        "Review telemetry mapping, false positives and the selected Atomic procedure "
+        "before laboratory use. This report does not establish full technique coverage.\n"
     )
     manifest = {
-        "version": "0.1.0a1",
+        "schema_version": 1,
+        "version": __version__,
         "technique": technique,
         "scenario": scenario["id"],
         "files": {
@@ -292,3 +354,78 @@ def bundle(
         with (output / name).open("x", encoding="utf-8", newline="\n") as stream:
             stream.write(text)
     return output
+
+
+BUNDLE_FILES = frozenset(
+    {
+        "rule.yml",
+        "splunk.txt",
+        "defender.txt",
+        "fixtures.json",
+        "validation.json",
+        "atomic-plan.json",
+        "REPORT.md",
+    }
+)
+
+
+def verify_bundle(output: Path) -> dict:
+    """Check package integrity; hashes are not signatures or detection evidence."""
+    manifest_path = output / "manifest.json"
+    if manifest_path.is_symlink():
+        raise InputError("Manifest symlinks are not accepted")
+    manifest = load_file(manifest_path, "json")
+    if not isinstance(manifest, dict) or not isinstance(manifest.get("files"), dict):
+        raise InputError("Invalid bundle manifest")
+    digests = manifest["files"]
+    if set(digests) != BUNDLE_FILES:
+        raise InputError("Manifest must contain exactly the supported bundle files")
+    if any(
+        not isinstance(v, str) or not re.fullmatch(r"[0-9a-f]{64}", v) for v in digests.values()
+    ):
+        raise InputError("Invalid SHA256 digest")
+    results = []
+    for name, expected in sorted(digests.items()):
+        path = output / name
+        if path.is_symlink() or not path.is_file():
+            results.append({"file": name, "pass": False, "reason": "missing_or_not_regular"})
+            continue
+        actual = hashlib.sha256(read_bytes(path)).hexdigest()
+        results.append({"file": name, "pass": actual == expected})
+    unexpected = sorted(
+        p.name for p in output.iterdir() if p.name not in BUNDLE_FILES | {"manifest.json"}
+    )
+    return {
+        "scope": "bundle_integrity",
+        "passed": all(r["pass"] for r in results) and not unexpected,
+        "files": results,
+        "unexpected_files": unexpected,
+        "limitation": "SHA256 checks integrity, not authenticity or SIEM detection coverage.",
+    }
+
+
+def doctor() -> dict:
+    """Exercise installed resources and both backends without a network or subprocess."""
+    checks = []
+    for scenario in scenarios():
+        rule = generate_rule(scenario)
+        queries = {target: convert(rule, target) for target in ("splunk", "defender")}
+        checks.append({"technique": scenario["technique"], "passed": all(queries.values())})
+    return {
+        "version": __version__,
+        "python": sys.version.split()[0],
+        "dependencies": {
+            p: version(p)
+            for p in (
+                "pysigma",
+                "pysigma-backend-splunk",
+                "pysigma-backend-microsoft365defender",
+                "PyYAML",
+            )
+        },
+        "checks": checks,
+        "passed": all(c["passed"] for c in checks),
+        "scope": "offline_environment",
+        "siem_execution": "not_run",
+        "atomic_execution": "not_run",
+    }

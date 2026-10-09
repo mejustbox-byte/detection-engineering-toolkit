@@ -1,39 +1,20 @@
-# Верификация
+# Состояние проверок
 
-## Проверенное окружение
+## 0.1.0a2
 
-CPython 3.12.15, uv 0.12.23, зависимости из uv.lock. Локальные проверки выполнены на Linux. GitHub Actions проверяет Linux и Windows.
+Локальный Linux цикл: 31 тест, Ruff lint/format, doctor, внешняя Sigma конвертация и проверка ссылок — pass. Чистая установка wheel вне checkout: doctor и четыре bundle/integrity процесса — pass.
 
-## Результаты
+[CI для реализации 0.1.0a2](https://github.com/mejustbox-byte/detection-engineering-toolkit/actions/runs/37956459675) прошёл на Windows и Linux для commit `591dbdbd656f5143933c8397f517dbe5b9cb40d5`: по 31 тесту, lint/format, doctor, build, bundle/integrity и wheel install вне checkout. Для финального merge commit и release проверяйте отдельные запуски Actions; результат другого SHA не заменяет эту проверку.
 
-| Проверка | Результат |
-|---|---|
-| 20 unit/integration тестов | pass на Linux и Windows |
-| Sigma parsing и SPL/KQL conversion четырёх сценариев | pass |
-| UTF-8 stdout при исходной cp1252 кодировке | pass |
-| ruff check | pass |
-| Frozen install | pass |
-| Wheel/sdist build | pass |
-| Offline bundle smoke | pass на Linux и Windows |
-| Установка wheel в отдельный venv вне checkout | pass на Linux |
+## Опубликованная базовая версия 0.1.0a1
 
-CI для commit `809356434742dea86a14bb7ae97908a080f21c1b`: https://github.com/mejustbox-byte/detection-engineering-toolkit/actions/runs/37943840949 . Исправление UTF-8 дополнительно прошло в предыдущем run: https://github.com/mejustbox-byte/detection-engineering-toolkit/actions/runs/37943677116 .
+- Merge commit: `5e7800fb8c042bdc171d7b5aa8ed810a63673fa6`.
+- [CI Linux/Windows](https://github.com/mejustbox-byte/detection-engineering-toolkit/actions/runs/37953235395): успешно, по 20 тестов, lint, build и bundle smoke.
+- [Release workflow](https://github.com/mejustbox-byte/detection-engineering-toolkit/actions/runs/37953436439): успешно, wheel install вне checkout и проверка скачанных SHA256.
+- [Prerelease](https://github.com/mejustbox-byte/detection-engineering-toolkit/releases/tag/v0.1.0a1): wheel, sdist, source ZIP, notes и SHA256SUMS.
 
-Первый Windows run выявил чтение UTF-8 JSON через системную cp1252 кодировку в тесте. Чтение файлов теперь явно использует UTF-8; CLI также устанавливает UTF-8 для stdout/stderr. Regression test проверяет CLI в процессе с исходной cp1252 pipe encoding.
+## Не выполнено
 
-## Воспроизведение
+Реальные Windows VM тесты с upstream Atomic; доставка и match в Splunk/Defender; cleanup реального теста; полная проверка macOS; full dependency/CVE audit. Соответствующие результаты остаются `not_run`, даже при зелёном offline CI.
 
-```bash
-uv sync --frozen --extra dev
-uv run --frozen --extra dev pytest -q
-uv run --frozen --extra dev ruff check .
-uv run --frozen --extra dev ruff format --check .
-uv build
-uv run --frozen detkit bundle T1033 --output output/demo
-```
-
-## Непроверенные области
-
-Реальные upstream Atomic procedures, Windows endpoint telemetry, SIEM query execution, ingestion latency, macOS runtime, CVE audit и публикация release: **not_run**. Успех Windows CI подтверждает offline Python-пакет, а не лабораторное обнаружение.
-
-Тестовая Atomic запись собственная синтетическая. Она проверяет контракт parser/plan, а не совместимость выбранной upstream procedure. Для реального доказательства нужен протокол [LOCAL-PC.md](LOCAL-PC.md).
+Разделение уровней описано в [VALIDATION.md](VALIDATION.md). Лабораторные свидетельства должны содержать версии, UTC время и результат каждого этапа.

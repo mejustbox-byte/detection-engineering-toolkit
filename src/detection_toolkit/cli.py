@@ -14,11 +14,14 @@ from .core import (
     atomic_tests,
     bundle,
     convert,
+    convert_file,
+    doctor,
     generate_rule,
     load_file,
     scenario_for,
     scenarios,
     validate_cases,
+    verify_bundle,
 )
 
 
@@ -27,12 +30,21 @@ def parser():
     root.add_argument("--version", action="version", version=__version__)
     commands = root.add_subparsers(dest="command", required=True)
     commands.add_parser("list", help="Поддерживаемые сценарии")
+    commands.add_parser("doctor", help="Check installed data and both conversion backends")
+    verify = commands.add_parser("verify-bundle", help="Check bundle SHA256 integrity")
+    verify.add_argument("path", type=Path)
+    external = commands.add_parser("convert-file", help="Convert a local Sigma YAML file")
+    external.add_argument("path", type=Path)
+    external.add_argument("--target", choices=("splunk", "defender"), required=True)
     for name in ("rule", "convert", "validate", "bundle", "atomic-list", "atomic-plan"):
         cmd = commands.add_parser(name)
         cmd.add_argument("technique", help="ATT&CK ID")
         if name in ("atomic-list", "atomic-plan", "bundle"):
             cmd.add_argument("--atomic-file", type=Path, required=name != "bundle")
         if name in ("atomic-plan", "bundle"):
+            cmd.add_argument(
+                "--atomic-commit", help="Full upstream commit SHA (unverified provenance)"
+            )
             cmd.add_argument("--test-guid", required=name == "atomic-plan")
             cmd.add_argument(
                 "--lab-ack",
@@ -56,14 +68,30 @@ def main(argv=None):
     try:
         if args.command == "list":
             result = scenarios()
+        elif args.command == "doctor":
+            result = doctor()
+        elif args.command == "verify-bundle":
+            result = verify_bundle(args.path)
+        elif args.command == "convert-file":
+            print("\n".join(convert_file(args.path, args.target)))
+            return 0
         elif args.command == "atomic-list":
             result = atomic_tests(args.atomic_file, args.technique)
         elif args.command == "atomic-plan":
             scenario_for(args.technique)
-            result = atomic_plan(args.atomic_file, args.technique, args.test_guid, args.lab_ack)
+            result = atomic_plan(
+                args.atomic_file, args.technique, args.test_guid, args.lab_ack, args.atomic_commit
+            )
         elif args.command == "bundle":
             result = str(
-                bundle(args.technique, args.output, args.atomic_file, args.test_guid, args.lab_ack)
+                bundle(
+                    args.technique,
+                    args.output,
+                    args.atomic_file,
+                    args.test_guid,
+                    args.lab_ack,
+                    args.atomic_commit,
+                )
             )
         else:
             scenario = scenario_for(args.technique)

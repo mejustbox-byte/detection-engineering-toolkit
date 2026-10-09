@@ -4,9 +4,9 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "detection-engineering-toolkit"
-version = "0.1.0a1"
+version = "0.1.0a2"
 readme = "README.md"
-description = "Проверяемая цепочка ATT&CK → Sigma → SIEM → Atomic Red Team"
+description = "Reproducible detection engineering: ATT&CK scenarios, Sigma, SIEM queries and Atomic test plans"
 requires-python = ">=3.12"
 dependencies = ["pysigma==1.5.1", "pysigma-backend-splunk==2.1.0", "pysigma-backend-microsoft365defender==0.3.2", "PyYAML==6.0.3"]
 

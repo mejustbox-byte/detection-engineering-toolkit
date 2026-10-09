@@ -1,17 +1,18 @@
-# Выпуск
+# Процесс выпуска
 
-Текущая версия 0.1.0a1 подготовлена локально и не опубликована. Первый выпуск должен быть prerelease: полная лабораторная цепочка не проверена.
+1. Согласуйте version в pyproject, `__init__`, lock и notes; обновите RU/EN документы.
+2. Запустите проверки [VALIDATION.md](VALIDATION.md), убедитесь в отсутствии приватных данных.
+3. Откройте PR; проверьте diff и дождитесь успешного Windows/Linux CI на точном HEAD.
+4. Слейте PR, дождитесь CI main и запишите полный merge SHA.
+5. В Actions запустите «Выпуск prerelease» из main: укажите merge SHA в `commit`, тег версии в `tag`, например `v0.1.0a2`.
+6. Build job проверяет checkout=main SHA и tag=package version, выполняет frozen тесты, lint, doctor, build и wheel smoke вне checkout.
+7. Publish job с `contents: write` создаёт новый GitHub prerelease; assets скачиваются и проверяются по SHA256SUMS.
+8. Проверьте страницу релиза, tag commit, все assets и Success workflow. Не передвигайте опубликованный тег.
 
-Порядок: документация и tests → PR → удалённый CI точного HEAD → review → разрешённое merge → checkout итогового commit → чистая сборка → tag → prerelease с assets → скачивание и сравнение SHA256. Существующие tags не перемещаются.
+## Артефакты
 
-Артефакты: wheel, sdist, полный source archive с uv.lock/документами/scripts/workflow, SHA256SUMS. Стандартный sdist сам по себе может не включать CI; MANIFEST.in специально добавляет документы и setup scripts.
+Wheel, sdist, tracked source ZIP, двуязычные notes и SHA256SUMS. Source ZIP включает lock, scripts, tests, docs и workflow. Wheel install через pip не эквивалентен frozen source install. SHA256SUMS не является цифровой подписью.
 
-```bash
-uv sync --frozen --extra dev
-uv run --frozen --extra dev pytest -q
-uv run --frozen --extra dev ruff check .
-uv build
-```
+## Ошибки
 
-CVE-аудит и real lab checks имеют отдельные статусы и не заменяются синтетикой. Prerelease notes явно перечисляют not_run. Выпуск стабильной версии требует критериев из REQUIREMENTS и LOCAL-PC.
-
+Существующий tag/release не перезаписывается. Если publish создал release, но проверка assets завершилась ошибкой, сначала исследуйте опубликованные файлы; не запускайте повторно create вслепую. Новый исправленный продукт получает новую версию. Real lab `not_run` указывается явно.

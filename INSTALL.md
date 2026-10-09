@@ -1,45 +1,39 @@
-# Установка и удаление
+# Установка
 
 ## Из исходников
 
-Требуются Python 3.12.15, uv 0.12.23 и доступ к PyPI при первой установке. Получите официальные installers; исходники распакуйте в отдельный каталог.
-
-POSIX:
+Поддерживаемый runtime: CPython 3.12+. CI использует Python 3.12 на Windows и Linux; полная проверка macOS пока не выполнена. `uv.lock` закрепляет зависимости; версия uv для воспроизведения — 0.12.23. `.python-version` задаёт 3.12.15.
 
 ```bash
+git clone https://github.com/mejustbox-byte/detection-engineering-toolkit.git
 cd detection-engineering-toolkit
-bash scripts/setup.sh
+uv sync --frozen --extra dev
 uv run --frozen detkit --version
-uv run --frozen detkit bundle T1033 --output output/demo
+uv run --frozen detkit doctor
+uv run --frozen --extra dev pytest -q
 ```
 
-Windows PowerShell:
-
-```powershell
-Set-Location detection-engineering-toolkit
-.\scripts\setup.ps1
-uv run --frozen detkit --version
-uv run --frozen detkit bundle T1033 --output output/demo
-```
-
-При локальной политике запрета PowerShell scripts выполните строки из setup.ps1 вручную в согласованной оболочке; не отключайте защитную политику. На macOS Intel CLI может работать через установленный CPython; запуск Windows Atomic требует отдельной Windows VM. macOS здесь не тестировалась.
+Linux/macOS: `bash scripts/setup.sh`. Windows PowerShell: `./scripts/setup.ps1`. Перед запуском просмотрите скрипт. Он устанавливает зависимости и выполняет offline проверки.
 
 ## Из wheel
 
-После проверки SHA256:
+Скачайте wheel и `SHA256SUMS` из одного GitHub Release. Сверьте SHA256 до установки. Создайте отдельный venv:
 
 ```bash
-uv venv .wheel-venv --python 3.12.15
-uv pip install --python .wheel-venv/bin/python dist/detection_engineering_toolkit-0.1.0a1-py3-none-any.whl
-.wheel-venv/bin/detkit list
+python -m venv .venv
+# Linux/macOS
+.venv/bin/python -m pip install detection_engineering_toolkit-0.1.0a2-py3-none-any.whl
+.venv/bin/detkit doctor
 ```
 
-На Windows замените путь Python на `.wheel-venv\Scripts\python.exe`, CLI — `.wheel-venv\Scripts\detkit.exe`. Установка одного wheel разрешает зависимости по прямым pins; для точного транзитивного окружения используйте исходники и `uv sync --frozen`.
+Windows: замените пути на `.venv/Scripts/python.exe` и `.venv/Scripts/detkit.exe`. Wheel содержит код и встроенный каталог; полная документация и lock доступны в исходном ZIP/sdist. Установка wheel разрешает версии транзитивных зависимостей через pip; для точного frozen окружения используйте source + `uv.lock`.
 
-## Проверка
+## Типичные проблемы
 
-`detkit --version` показывает 0.1.0a1; bundle создаёт новую папку и validation с not_run для SIEM. Уже существующий output вызывает отказ. См. [RUNBOOK.md](RUNBOOK.md) для ошибок.
+- `uv` не найден: установите официальный uv указанной версии, затем откройте новую оболочку.
+- `No module named detection_toolkit`: работайте через `uv run --frozen` или активируйте venv, куда установлен wheel.
+- Каталог output уже существует: выберите новый путь; экспорт специально запрещает перезапись.
+- Конвертация отклонена: проверьте Sigma logsource и возможности выбранного backend.
+- Интернет нужен при первой установке; после установки CLI использует только локальные входы.
 
-## Удаление
-
-Удалите только созданный для проекта venv и каталог исходников после сохранения нужных отчётов. Пакеты глобального Python не меняются при uv sync. Отчёты могут содержать внутренние данные; порядок хранения/удаления определяется владельцем. Atomic-модуль устанавливается независимо и этим инструментом не удаляется.
+Далее: [RUNBOOK.md](RUNBOOK.md) и [DEMO.md](DEMO.md).
