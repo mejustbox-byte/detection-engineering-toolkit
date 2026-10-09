@@ -2,7 +2,9 @@
 
 ## 0.1.0a2
 
-На Linux в рабочем checkout выполнено 31 тест; все прошли. Ruff lint/format проверяются в CI. Новый CI должен подтвердить те же изменения на Windows и Linux и установку wheel вне checkout. Не считайте ожидаемый запуск уже пройденным: точный SHA и результат доступны в GitHub Actions и PR текущего изменения.
+Локальный Linux цикл: 31 тест, Ruff lint/format, doctor, внешняя Sigma конвертация и проверка ссылок — pass. Чистая установка wheel вне checkout: doctor и четыре bundle/integrity процесса — pass.
+
+[CI для реализации 0.1.0a2](https://github.com/mejustbox-byte/detection-engineering-toolkit/actions/runs/37956459675) прошёл на Windows и Linux для commit `591dbdbd656f5143933c8397f517dbe5b9cb40d5`: по 31 тесту, lint/format, doctor, build, bundle/integrity и wheel install вне checkout. Для финального merge commit и release проверяйте отдельные запуски Actions; результат другого SHA не заменяет эту проверку.
 
 ## Опубликованная базовая версия 0.1.0a1
 

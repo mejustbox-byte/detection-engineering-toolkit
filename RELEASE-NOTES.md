@@ -9,7 +9,7 @@
 - `verify-bundle`: проверка SHA256, отсутствующих/лишних файлов и allowlist manifest.
 - Atomic: parse/hash одного снимка, сохранение cleanup, строгие типы metadata и optional upstream commit (непроверенный).
 - Двуязычные README, технические документы, справочник CLI и лабораторный протокол; REPORT содержит русский и английский текст.
-- 29 regression тестов; CI Windows/Linux дополнен wheel install вне checkout, doctor и integrity smoke.
+- 31 regression тест; CI Windows/Linux дополнен wheel install вне checkout, doctor и integrity smoke.
 
 Четыре встроенных Discovery сценария сохраняют статус experimental/low. Offline predicate не выполняет Sigma/SIEM. Real Windows VM, upstream Atomic, Splunk/Defender query validation, полный macOS цикл и dependency/CVE audit остаются not_run. Полный ATT&CK каталог, automatic runner и SIEM API отсутствуют. Выпуск — prerelease.
 

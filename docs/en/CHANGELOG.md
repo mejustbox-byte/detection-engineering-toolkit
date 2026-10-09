@@ -2,7 +2,7 @@
 
 ## 0.1.0a2
 
-Added doctor, external Sigma conversion, bundle integrity and optional Atomic commit provenance. Fixed the parse/hash race and lost cleanup metadata; malformed/cyclic Atomic metadata is rejected. Complete RU/EN documentation, bilingual REPORT, 29 tests and wheel smoke on both OS.
+Added doctor, external Sigma conversion, bundle integrity and optional Atomic commit provenance. Fixed the parse/hash race and lost cleanup metadata; malformed/cyclic Atomic metadata is rejected. Complete RU/EN documentation, bilingual REPORT, 31 tests and wheel smoke on both OS.
 
 ## 0.1.0a1 — 2026-10-09
 
