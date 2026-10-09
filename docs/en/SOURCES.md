@@ -1,6 +1,6 @@
-# Источники
+# Sources
 
-Первичные источники для модели правил, telemetry и ручного лабораторного процесса. Проверены при подготовке 0.1.0a2; содержимое upstream может изменяться.
+Primary references for rule models, telemetry and the manual laboratory workflow. Checked while preparing 0.1.0a2; upstream content may change.
 
 - [MITRE ATT&CK T1033](https://attack.mitre.org/techniques/T1033/)
 - [MITRE ATT&CK T1082](https://attack.mitre.org/techniques/T1082/)
@@ -18,4 +18,4 @@
 - [Windows 4688](https://learn.microsoft.com/windows/security/threat-protection/auditing/event-4688)
 - [DeviceProcessEvents](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-deviceprocessevents-table)
 
-Встроенные рецепты и synthetic fixtures созданы в этом проекте; upstream Sigma/Atomic правила не включены. Для реального Atomic сохраните полный commit и SHA256 YAML. Версии Python dependencies фиксируются в pyproject/uv.lock.
+Built-in recipes and synthetic fixtures are authored in this project; upstream Sigma/Atomic rules are not bundled. Record the full commit and YAML SHA256 for real Atomic use. Python dependency versions are recorded in pyproject/uv.lock.

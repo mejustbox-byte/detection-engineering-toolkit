@@ -1,34 +1,30 @@
-# Контракт CLI и данных
+# Контракт продукта
 
-## Команды
+## Сценарий → правило
 
-| Команда | Результат |
-|---|---|
-| `detkit list` | JSON-каталог поддерживаемых сценариев |
-| `detkit rule T1033` | Sigma YAML в stdout |
-| `detkit convert T1033 --target splunk` | SPL в stdout |
-| `detkit convert T1033 --target defender` | KQL в stdout |
-| `detkit validate T1033 --cases cases.json` | JSON результата offline предиката |
-| `detkit atomic-list T1033 --atomic-file T1033.yaml` | Список GUID, платформ и исходных команд |
-| `detkit atomic-plan T1033 --atomic-file T1033.yaml --test-guid GUID` | План деталей/предпосылок/cleanup |
-| `detkit bundle T1033 --output output/demo` | Новый каталог пакета |
+Техника выбирается по ID `Tdddd` или `Tdddd.ddd`. Генерация поддерживает только четыре записи встроенного каталога. UUID зависит от scenario ID и namespace v1, не от момента запуска. Правило проверяет `Image|endswith`; для T1016 дополнительно применяется `CommandLine|contains|all: ['/all']`. Это поиск подстроки, не разбор аргументов: `/alligator` тоже содержит `/all`.
 
-`atomic-plan` и `bundle` допускают `--lab-ack`, чтобы добавить команду execute. Для bundle `--atomic-file` и `--test-guid` задаются вместе. Неизвестные техники отказываются; поддерживается один сценарий на технику. Код 0 — успешный offline результат/генерация, 1 — хотя бы один случай не совпал с expected, 2 — ошибка ввода/IO/конвертации. Ошибки argparse также имеют код 2.
+## Конвертация
 
-## Нормализованные случаи
+Для каждого вызова создаётся новая `SigmaCollection`: pipeline может изменять правила. Splunk использует `splunk_windows_pipeline`, Defender — `microsoft_365_defender_pipeline`. `convert-file` принимает внешний YAML с одним или несколькими поддерживаемыми backend правилами. Произвольный logsource, correlation и каждый модификатор Sigma не гарантируются; ошибка конвертации возвращает код 2. Pipeline и конфигурация SIEM не настраиваются через CLI этой версии.
+
+## Размеченные случаи
 
 ```json
-[{"id":"positive","expected":true,"event":{"Image":"C:\Windows\System32\whoami.exe","CommandLine":"whoami"}}]
+[
+  {"id":"positive","expected":true,"event":{"Image":"C:\\Windows\\System32\\whoami.exe","CommandLine":"whoami"}},
+  {"id":"negative","expected":false,"event":{"Image":"C:\\Windows\\System32\\notepad.exe"}}
+]
 ```
 
-Корень — непустой массив. id — уникальная строка; expected — JSON boolean; event — объект. Если Image или CommandLine присутствуют, они строки. Отсутствующее Image не совпадает; отсутствие CommandLine не совпадает, если правило требует его. Неиспользуемые дополнительные поля игнорируются. Сравнение suffix/contains регистронезависимое (`casefold`); tokenizer не используется. Поэтому `/alligator` также содержит `/all`: это ограничение экспериментального правила.
+`id` — уникальная строка, `expected` — boolean, `event` — объект. Присутствующие `Image` и `CommandLine` должны быть строками. Отсутствующий Image означает отсутствие совпадения. `casefold` применяется к строковым suffix/substring проверкам. Поля времени, parent process, user и host не оцениваются. `validate` не принимает внешнее Sigma-правило и не доказывает равенство семантики backend.
 
-## Отчёт и пакет
+## Входы и пакеты
 
-Validation содержит scope `offline_scenario_predicate`, passed, cases с actual/expected/pass и `siem_execution=not_run`, `atomic_execution=not_run`. Эти статусы не меняются от успеха генерации. Atomic план содержит SHA256 YAML, GUID, исходную команду и review-only статусы. При отсутствии Atomic входа план содержит причину not_run.
+UTF-8 JSON/YAML, максимум 8 MiB на прочитанный файл. YAML обрабатывается `safe_load`; Atomic metadata должно быть JSON-совместимым и без циклов. Это ограничение размера, не sandbox или полная защита от exhaustion.
 
-Manifest содержит version, technique, scenario и mapping имя файла → SHA256. Он не является цифровой подписью и не подтверждает происхождение пакета.
+Пакет содержит семь артефактов и manifest. Schema version 1 добавляет версию продукта. Проверка принимает также старый manifest 0.1.0a1 без schema_version. Точный список файлов обязателен; digest — 64 lowercase hex символа. Manifest сам не хешируется и не подписан; изменение файла вместе с manifest может остаться незамеченным. Symlink файлов отвергается, но проверка не защищена от конкурентной модификации локальным процессом.
 
-## Расширение
+## Atomic
 
-Добавьте запись сценария, review ATT&CK-сопоставления и telemetry prerequisites, положительные и пограничные негативные тесты, оба backend и лабораторный протокол. Если сценариев на технику станет несколько, CLI обязан добавить явный selector; текущий resolver отказывает неоднозначным данным. Версионирование семантики UUID обновляется осознанно.
+Техника YAML, GUID и Windows platform проверяются. Хеш считается по тому же снимку, который разбирался. `source_commit` не проверяется через Git или сеть. Команды — данные; test behavior, зависимости и cleanup требуют ручного ревью. `--lab-ack` не является исполнителем.

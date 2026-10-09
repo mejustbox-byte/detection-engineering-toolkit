@@ -1,16 +1,19 @@
 # Чеклист выпуска
 
-- [ ] Удалённый repo существует; имя/owner/public visibility проверены.
-- [ ] Ветка и commit отправлены; PR соответствует итоговой реализации.
-- [ ] Actions Linux и Windows прошли на точном HEAD.
-- [ ] Документы на русском, ссылки и команды согласованы с CLI.
-- [ ] Frozen install и wheel smoke вне checkout прошли.
-- [ ] Atomic GUID/commit/source provenance проверены или честно отмечены not_run.
-- [ ] Real SIEM/VM результаты отдельно от offline fixture report.
-- [ ] Source archive содержит lock, scripts, tests, docs и workflow.
-- [ ] Нет credentials, приватных событий, внутренних hostnames и endpoints.
-- [ ] Финальный tag относится к проверенному merge commit и не передвигался.
-- [ ] Release notes на русском, статус prerelease и ограничения явные.
-- [ ] Assets опубликованы; скачанные SHA256 совпадают.
+Эта форма заполняется для конкретного release commit; пустой пункт не означает pass.
 
-Незаполненный пункт не считается пройденным. Итоговый статус подготовки см. VERIFICATION.
+- [ ] Package version, runtime version, lock и tag согласованы.
+- [ ] Все команды и документация RU/EN соответствуют реализации.
+- [ ] PR diff проверен; Windows/Linux CI успешен на точном HEAD.
+- [ ] Merge SHA совпадает с main; main CI успешен.
+- [ ] Frozen install, тесты, lint/format и doctor успешны.
+- [ ] Wheel установлен вне checkout; bundle integrity успешна.
+- [ ] Source ZIP содержит весь tracked source и двуязычные docs.
+- [ ] Нет secrets, реальных событий и приватных endpoints.
+- [ ] Real Atomic/SIEM результаты отмечены pass/fail/not_run с обоснованием.
+- [ ] Prerelease flag и ограничения присутствуют в notes.
+- [ ] Новый tag относится к проверенному SHA и не передвигался.
+- [ ] Wheel/sdist/source/notes/SHA256SUMS опубликованы.
+- [ ] Скачанные assets прошли SHA256 check.
+
+Методика: [RELEASE.md](RELEASE.md). Состояние: [VERIFICATION.md](VERIFICATION.md).

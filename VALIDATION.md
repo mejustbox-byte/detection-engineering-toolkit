@@ -1,20 +1,30 @@
-# Матрица проверок
+# Методика проверки
 
-| Область | Доступная проверка | Требуемая реальная проверка | Статус реальной |
-|---|---|---|---|
-| ATT&CK | Whitelist четырёх ID, отказ неизвестным | Экспертный review сопоставления наблюдаемого поведения | not_run |
-| Sigma | Парсинг pySigma, стабильный UUID, tags | Review качества и false positives | not_run |
-| Splunk | Backend conversion, ожидаемые поля и fragments | Выполнение SPL на доставленных Windows events | not_run |
-| Defender | Kusto backend, DeviceProcessEvents и fragments | Выполнение KQL на onboarded endpoint | not_run |
-| Atomic | GUID/platform/schema, show/execute gating | Конкретная upstream procedure в VM | not_run |
-| Offline events | positive/negative/case/missing fields | Достоверность telemetry и ingestion | not_run |
-| Packaging | frozen install, build, wheel smoke | Windows/macOS clean install | not_run |
-| CI | Валидный подготовленный workflow | Удалённый exact-HEAD Linux/Windows Actions | pass |
+## Уровни доказательств
 
-## Критерии
+| Уровень | Что подтверждает | Что не подтверждает |
+|---|---|---|
+| Sigma parse | Структура правила принимается pySigma | Качество сигнала |
+| Backend conversion | Из выбранной модели получается SPL/KQL | Работу запроса в конкретном SIEM |
+| Offline predicate | Suffix/substring поведение на размеченных случаях | Исполнение Sigma, запросов или эквивалентность всех backend |
+| Bundle integrity | Совпадение байтов и manifest | Подлинность, безопасность, full coverage |
+| Real lab | Факт execution, доставки события, query match и cleanup | Универсальность во всех окружениях |
 
-Offline tests обязаны отказывать повреждённому YAML, инъекции ID/GUID, неоднозначному/неподдерживаемому сценарию, неверному event type и перезаписи. Validation failure имеет exit code 1, input failure — 2.
+## Автоматический цикл
 
-Сценарный evaluator намеренно ограничен suffix/contains. Он не претендует на универсальную семантику Sigma и не подтверждает преобразованную SIEM семантику. При расширении modifiers требуется новый validator либо настоящий test backend с отдельным ADR.
+```bash
+uv sync --frozen --extra dev
+uv run --frozen --extra dev pytest -q
+uv run --frozen --extra dev ruff check .
+uv run --frozen --extra dev ruff format --check .
+uv run --frozen detkit doctor
+uv build
+```
 
-В реальном стенде правило проходит только если positive raw event поступил и query возвратил ожидаемый result, а negative набор оценён на том же pipeline и time window. Общая техника не получает «covered» от одной процедуры. Неуспешная/недоступная проверка сохраняет fail/unknown/not_run.
+CI Windows/Linux дополнительно строит bundle, проверяет manifest и устанавливает wheel в отдельный venv вне checkout. Тесты проверяют каждый сценарий/оба backend, некорректные входы, Atomic GUID и snapshot provenance, legacy pipe UTF-8, external Sigma, modified/missing/extra artifacts и traversal.
+
+## Регрессия
+
+При изменении rule, dependency или pipeline сравните запросы и ручной контракт. Добавляйте негативный случай, соответствующий причине исправления. Не назначайте unknown событию expected=false автоматически: разметка должна быть обоснованной. Реальную телеметрию обезличивайте до публикации.
+
+Состояние проверок: [VERIFICATION.md](VERIFICATION.md). Протокол стенда: [LOCAL-PC.md](LOCAL-PC.md).

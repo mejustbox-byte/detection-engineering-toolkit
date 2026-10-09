@@ -1,0 +1,4 @@
+[
+  {"id": "positive", "expected": true, "event": {"Image": "C:\\Windows\\System32\\whoami.exe", "CommandLine": "whoami"}},
+  {"id": "negative", "expected": false, "event": {"Image": "C:\\Windows\\System32\\notepad.exe"}}
+]

@@ -1,0 +1,16 @@
+title: Example Inventory Utility Execution
+id: e9115ee7-6c4c-47f6-bcf2-22b8fba7bcd8
+status: experimental
+description: Synthetic example for external Sigma conversion; not a deployed detection.
+author: Detection Engineering Toolkit
+logsource:
+  product: windows
+  category: process_creation
+detection:
+  selection:
+    Image|endswith: '\example.exe'
+    CommandLine|contains: '--inventory'
+  condition: selection
+falsepositives:
+  - Authorized inventory workflows
+level: low
