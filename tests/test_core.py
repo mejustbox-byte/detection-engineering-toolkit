@@ -1,5 +1,8 @@
 import hashlib
 import json
+import os
+import subprocess
+import sys
 from uuid import UUID
 
 import pytest
@@ -110,10 +113,13 @@ def test_atomic_guid_selection(atomic):
 def test_bundle_manifest_and_no_overwrite(tmp_path):
     output = tmp_path / "out"
     bundle("T1016", output)
-    manifest = json.loads((output / "manifest.json").read_text())
+    manifest = json.loads((output / "manifest.json").read_text(encoding="utf-8"))
     for name, digest in manifest["files"].items():
         assert hashlib.sha256((output / name).read_bytes()).hexdigest() == digest
-    assert json.loads((output / "validation.json").read_text())["siem_execution"] == "not_run"
+    assert (
+        json.loads((output / "validation.json").read_text(encoding="utf-8"))["siem_execution"]
+        == "not_run"
+    )
     with pytest.raises(FileExistsError):
         bundle("T1016", output)
     with pytest.raises(InputError):
@@ -141,3 +147,15 @@ def test_yaml_unsafe_tag_rejected(tmp_path):
     path.write_text('!!python/object/apply:os.system ["echo bad"]')
     with pytest.raises(InputError):
         load_file(path, "yaml")
+
+
+def test_cli_utf8_with_legacy_pipe_encoding():
+    env = dict(os.environ, PYTHONIOENCODING="cp1252")
+    result = subprocess.run(
+        [sys.executable, "-m", "detection_toolkit.cli", "list"],
+        env=env,
+        capture_output=True,
+        check=True,
+    )
+    catalogue = json.loads(result.stdout.decode("utf-8"))
+    assert catalogue[0]["name"].startswith("Обнаружение")
