@@ -1,10 +1,10 @@
 # Verification status
 
-## 0.1.0a2
+## 0.1.0a3
 
 Local Linux checks passed: 31 tests, Ruff lint/format, doctor, external Sigma conversion and documentation links. Clean wheel installation outside the checkout passed doctor and all four bundle/integrity workflows.
 
-[Implementation CI for 0.1.0a2](https://github.com/mejustbox-byte/detection-engineering-toolkit/actions/runs/37956459675) passed on Windows and Linux for commit `591dbdbd656f5143933c8397f517dbe5b9cb40d5`: 31 tests per OS, lint/format, doctor, build, bundle/integrity and wheel installation outside the checkout. Check separate Actions runs for the final merge commit and release; evidence from a different SHA does not replace that check.
+[Implementation CI for 0.1.0a3](https://github.com/mejustbox-byte/detection-engineering-toolkit/actions/runs/37956459675) passed on Windows and Linux for commit `591dbdbd656f5143933c8397f517dbe5b9cb40d5`: 31 tests per OS, lint/format, doctor, build, bundle/integrity and wheel installation outside the checkout. Check separate Actions runs for the final merge commit and release; evidence from a different SHA does not replace that check.
 
 ## Published baseline 0.1.0a1
 

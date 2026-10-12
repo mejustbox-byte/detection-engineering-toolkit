@@ -1,0 +1,181 @@
+{
+  "schema_version": "readiness-1.0",
+  "scope": "synthetic-readiness",
+  "synthetic": true,
+  "chains": [
+    {
+      "id": "whoami",
+      "risk": "synthetic-discovery",
+      "technique": "T1033",
+      "telemetry": {
+        "source": "windows.process_creation",
+        "available": true,
+        "mapped_fields": [
+          "Image",
+          "CommandLine"
+        ]
+      },
+      "cases": [
+        {
+          "id": "positive",
+          "expected": true,
+          "event": {
+            "Image": "C:\\Windows\\System32\\whoami.exe",
+            "CommandLine": "C:\\Windows\\System32\\whoami.exe "
+          }
+        },
+        {
+          "id": "case-insensitive",
+          "expected": true,
+          "event": {
+            "Image": "C:\\WINDOWS\\SYSTEM32\\WHOAMI.EXE",
+            "CommandLine": "C:\\WINDOWS\\SYSTEM32\\WHOAMI.EXE "
+          }
+        },
+        {
+          "id": "other-process",
+          "expected": false,
+          "event": {
+            "Image": "C:\\Windows\\notepad.exe",
+            "CommandLine": "notepad.exe"
+          }
+        },
+        {
+          "id": "missing-image",
+          "expected": false,
+          "event": {
+            "CommandLine": "whoami"
+          }
+        }
+      ],
+      "delivery": {
+        "state": "not_run",
+        "target": "splunk",
+        "execution_id": null,
+        "observed_at": null,
+        "rule_sha256": null
+      }
+    },
+    {
+      "id": "hostname",
+      "risk": "synthetic-discovery",
+      "technique": "T1082",
+      "telemetry": {
+        "source": "windows.process_creation",
+        "available": true,
+        "mapped_fields": [
+          "Image",
+          "CommandLine"
+        ]
+      },
+      "cases": [
+        {
+          "id": "positive",
+          "expected": true,
+          "event": {
+            "Image": "C:\\Windows\\System32\\hostname.exe",
+            "CommandLine": "C:\\Windows\\System32\\hostname.exe "
+          }
+        },
+        {
+          "id": "case-insensitive",
+          "expected": true,
+          "event": {
+            "Image": "C:\\WINDOWS\\SYSTEM32\\HOSTNAME.EXE",
+            "CommandLine": "C:\\WINDOWS\\SYSTEM32\\HOSTNAME.EXE "
+          }
+        },
+        {
+          "id": "other-process",
+          "expected": false,
+          "event": {
+            "Image": "C:\\Windows\\notepad.exe",
+            "CommandLine": "notepad.exe"
+          }
+        },
+        {
+          "id": "missing-image",
+          "expected": false,
+          "event": {
+            "CommandLine": "whoami"
+          }
+        }
+      ],
+      "delivery": {
+        "state": "not_run",
+        "target": "splunk",
+        "execution_id": null,
+        "observed_at": null,
+        "rule_sha256": null
+      }
+    },
+    {
+      "id": "ipconfig",
+      "risk": "synthetic-discovery",
+      "technique": "T1016",
+      "telemetry": {
+        "source": "windows.process_creation",
+        "available": true,
+        "mapped_fields": [
+          "Image",
+          "CommandLine"
+        ]
+      },
+      "cases": [
+        {
+          "id": "positive",
+          "expected": true,
+          "event": {
+            "Image": "C:\\Windows\\System32\\ipconfig.exe",
+            "CommandLine": "C:\\Windows\\System32\\ipconfig.exe /all"
+          }
+        },
+        {
+          "id": "case-insensitive",
+          "expected": true,
+          "event": {
+            "Image": "C:\\WINDOWS\\SYSTEM32\\IPCONFIG.EXE",
+            "CommandLine": "C:\\WINDOWS\\SYSTEM32\\IPCONFIG.EXE /ALL"
+          }
+        },
+        {
+          "id": "other-process",
+          "expected": false,
+          "event": {
+            "Image": "C:\\Windows\\notepad.exe",
+            "CommandLine": "notepad.exe"
+          }
+        },
+        {
+          "id": "missing-image",
+          "expected": false,
+          "event": {
+            "CommandLine": "whoami"
+          }
+        },
+        {
+          "id": "missing-argument",
+          "expected": false,
+          "event": {
+            "Image": "C:\\Windows\\System32\\ipconfig.exe",
+            "CommandLine": "C:\\Windows\\System32\\ipconfig.exe"
+          }
+        },
+        {
+          "id": "missing-commandline",
+          "expected": false,
+          "event": {
+            "Image": "C:\\Windows\\System32\\ipconfig.exe"
+          }
+        }
+      ],
+      "delivery": {
+        "state": "not_run",
+        "target": "splunk",
+        "execution_id": null,
+        "observed_at": null,
+        "rule_sha256": null
+      }
+    }
+  ]
+}

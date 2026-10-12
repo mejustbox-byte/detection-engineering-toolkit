@@ -2,7 +2,7 @@
 
 ## Support
 
-Development targets the current 0.1.0a2 prerelease. No SLA or long-term support policy has been announced. Older prereleases have no separate maintenance branch.
+Development targets the current 0.1.0a3 prerelease. No SLA or long-term support policy has been announced. Older prereleases have no separate maintenance branch.
 
 ## Reporting a vulnerability
 

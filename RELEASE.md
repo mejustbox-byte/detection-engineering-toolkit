@@ -4,7 +4,7 @@
 2. Запустите проверки [VALIDATION.md](VALIDATION.md), убедитесь в отсутствии приватных данных.
 3. Откройте PR; проверьте diff и дождитесь успешного Windows/Linux CI на точном HEAD.
 4. Слейте PR, дождитесь CI main и запишите полный merge SHA.
-5. В Actions запустите «Выпуск prerelease» из main: укажите merge SHA в `commit`, тег версии в `tag`, например `v0.1.0a2`.
+5. В Actions запустите «Выпуск prerelease» из main: укажите merge SHA в `commit`, тег версии в `tag`, например `v0.1.0a3`.
 6. Build job проверяет checkout=main SHA и tag=package version, выполняет frozen тесты, lint, doctor, build и wheel smoke вне checkout.
 7. Publish job с `contents: write` создаёт новый GitHub prerelease; assets скачиваются и проверяются по SHA256SUMS.
 8. Проверьте страницу релиза, tag commit, все assets и Success workflow. Не передвигайте опубликованный тег.

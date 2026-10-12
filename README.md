@@ -13,7 +13,7 @@ Detection Engineering Toolkit is a local CLI for detection engineers, SOC analys
 - **Quality checks:** `doctor` exercises the installed tool, `validate` checks expected scenario behavior, and `verify-bundle` checks package integrity.
 - **Bring your own rules:** `convert-file` converts local Sigma YAML independently of the built-in scenario catalogue.
 - **Connect Red and Blue:** select one Atomic GUID, retain the YAML SHA256, prerequisites and cleanup; execution is a separate lab step.
-- **Inspectable implementation:** source, tests, English/Russian documentation and Windows/Linux CI. Runtime makes no network requests and executes no emulation commands.
+- **Inspectable implementation:** source, tests, English/Russian documentation and Windows/Linux/macOS CI. Runtime makes no network requests and executes no emulation commands.
 
 ## Quick start
 
@@ -52,10 +52,16 @@ uv run --frozen detkit convert-file output/whoami/rule.yml --target defender
 
 ## Product status
 
-Version **0.1.0a2**, prerelease. The offline CLI is implemented and tested. Predicate validation does not execute Sigma or a SIEM query. Conversion does not establish telemetry delivery or detection in a particular SIEM. Real Windows VM, upstream Atomic and SIEM validation are **not run**. Follow the [lab guide](docs/en/LOCAL-PC.md) to collect that evidence.
+Version **0.1.0a3**, prerelease. The offline CLI is implemented and tested. Predicate validation does not execute Sigma or a SIEM query. Conversion does not establish telemetry delivery or detection in a particular SIEM. Real Windows VM, upstream Atomic and SIEM validation are **not run**. Follow the [lab guide](docs/en/LOCAL-PC.md) to collect that evidence.
 
 Built for practical detection engineering in 2026: reproducible artifacts, recorded input provenance and clearly scoped results. No independent ranking, market leadership or production-ready status is claimed.
 
 ## Explore
 
 [Installation](docs/en/INSTALL.md) · [End-to-end example](docs/en/DEMO.md) · [Contract](docs/en/CORE-CONTRACT.md) · [Threat model](docs/en/THREAT-MODEL.md) · [Security](docs/en/SECURITY.md) · [Verification](docs/en/VERIFICATION.md) · [Roadmap](docs/en/ROADMAP.md)
+
+## Detection Readiness
+
+Three risk/telemetry/rule/test chains reuse the existing toolkit APIs. Readiness keeps offline predicate and SIEM-delivery assertions separate. Default synthetic cases return incomplete coverage. See the guide for exact evidence limits.
+
+[Readiness documentation](docs/en/readiness/index.md)

@@ -1,10 +1,10 @@
 # Состояние проверок
 
-## 0.1.0a2
+## 0.1.0a3
 
 Локальный Linux цикл: 31 тест, Ruff lint/format, doctor, внешняя Sigma конвертация и проверка ссылок — pass. Чистая установка wheel вне checkout: doctor и четыре bundle/integrity процесса — pass.
 
-[CI для реализации 0.1.0a2](https://github.com/mejustbox-byte/detection-engineering-toolkit/actions/runs/37956459675) прошёл на Windows и Linux для commit `591dbdbd656f5143933c8397f517dbe5b9cb40d5`: по 31 тесту, lint/format, doctor, build, bundle/integrity и wheel install вне checkout. Для финального merge commit и release проверяйте отдельные запуски Actions; результат другого SHA не заменяет эту проверку.
+[CI для реализации 0.1.0a3](https://github.com/mejustbox-byte/detection-engineering-toolkit/actions/runs/37956459675) прошёл на Windows и Linux для commit `591dbdbd656f5143933c8397f517dbe5b9cb40d5`: по 31 тесту, lint/format, doctor, build, bundle/integrity и wheel install вне checkout. Для финального merge commit и release проверяйте отдельные запуски Actions; результат другого SHA не заменяет эту проверку.
 
 ## Опубликованная базовая версия 0.1.0a1
 

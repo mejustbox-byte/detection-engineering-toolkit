@@ -5,6 +5,8 @@ import json
 import sys
 from pathlib import Path
 
+from opsec_reports.core import ReportError, outcome, write_new
+from opsec_reports.core import load as strict_load
 from sigma.exceptions import SigmaError
 
 from . import __version__
@@ -23,12 +25,19 @@ from .core import (
     validate_cases,
     verify_bundle,
 )
+from .readiness import assess as readiness_assess
 
 
 def parser():
     root = argparse.ArgumentParser(description="ATT&CK → Sigma → SIEM → план Atomic")
     root.add_argument("--version", action="version", version=__version__)
     commands = root.add_subparsers(dest="command", required=True)
+    ready = commands.add_parser("readiness", help="Assess offline risk/telemetry/test chains")
+    ready.add_argument("path", type=Path)
+    ready.add_argument("--observed-at", required=True)
+    ready.add_argument("--output", type=Path, required=True)
+    ready.add_argument("--max-chains", type=int, default=100)
+    ready.add_argument("--maximum-age-days", type=int, default=30)
     commands.add_parser("list", help="Поддерживаемые сценарии")
     commands.add_parser("doctor", help="Check installed data and both conversion backends")
     verify = commands.add_parser("verify-bundle", help="Check bundle SHA256 integrity")
@@ -66,6 +75,13 @@ def main(argv=None):
             stream.reconfigure(encoding="utf-8")
     args = parser().parse_args(argv)
     try:
+        if args.command == "readiness":
+            result = readiness_assess(
+                strict_load(args.path), args.observed_at, args.max_chains, args.maximum_age_days
+            )
+            write_new(args.output, json.dumps(result, ensure_ascii=False, indent=2) + "\n")
+            print("readiness_result_written")
+            return outcome(result["assessment"])
         if args.command == "list":
             result = scenarios()
         elif args.command == "doctor":
@@ -104,7 +120,13 @@ def main(argv=None):
             result = validate_cases(scenario, load_file(args.cases, "json"))
         print(json.dumps(result, ensure_ascii=False, indent=2))
         return 1 if isinstance(result, dict) and result.get("passed") is False else 0
+    except ReportError:
+        print("invalid_readiness_input_or_output", file=sys.stderr)
+        return 3
     except (InputError, OSError, SigmaError, RecursionError) as exc:
+        if args.command == "readiness":
+            print("readiness_input_or_output_unavailable", file=sys.stderr)
+            return 3
         print(f"Ошибка: {exc}", file=sys.stderr)
         return 2
 

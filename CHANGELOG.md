@@ -1,5 +1,9 @@
 # История изменений
 
+## 0.1.0a3
+
+Три Readiness-цепочки на прежних API, строгий импорт и opsec-1.0 assessment, отдельные заявления SIEM-доставки и 11 пар RU/EN руководств. Локальный набор — 54 теста; CI добавляет macOS.
+
 ## 0.1.0a2
 
 Добавлены doctor, external Sigma conversion, bundle integrity и optional Atomic commit provenance. Исправлены parse/hash race и потеря cleanup metadata; некорректные/cyclic Atomic metadata отклоняются. Полная документация RU/EN, двуязычный REPORT, 31 тест и wheel smoke на обоих OS.

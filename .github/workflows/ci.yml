@@ -8,7 +8,7 @@ jobs:
   test:
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v6
@@ -25,23 +25,9 @@ jobs:
       - run: uv build
       - run: uv run --frozen detkit bundle T1033 --output output/smoke
       - run: uv run --frozen detkit verify-bundle output/smoke
+      - run: uv run --frozen python scripts/check_readiness_docs.py
       - name: Install wheel outside checkout
-        shell: bash
-        run: |
-          python - <<'PY'
-          import os, pathlib, subprocess, tempfile, venv
-          wheel = next(pathlib.Path('dist').glob('*.whl')).resolve()
-          with tempfile.TemporaryDirectory() as directory:
-              temp = pathlib.Path(directory)
-              venv.EnvBuilder(with_pip=True).create(temp / 'venv')
-              bindir = temp / 'venv' / ('Scripts' if os.name == 'nt' else 'bin')
-              python = bindir / ('python.exe' if os.name == 'nt' else 'python')
-              subprocess.run([str(python), '-m', 'pip', 'install', str(wheel)], check=True, cwd=temp)
-              cli = [str(python), '-m', 'detection_toolkit.cli']
-              subprocess.run(cli + ['doctor'], check=True, cwd=temp)
-              subprocess.run(cli + ['bundle', 'T1033', '--output', str(temp / 'smoke')], check=True, cwd=temp)
-              subprocess.run(cli + ['verify-bundle', str(temp / 'smoke')], check=True, cwd=temp)
-          PY
+        run: uv run --frozen python scripts/verify_readiness_install.py
       - uses: actions/upload-artifact@v7
         with:
           name: detkit-${{ matrix.os }}

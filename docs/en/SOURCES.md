@@ -1,6 +1,6 @@
 # Sources
 
-Primary references for rule models, telemetry and the manual laboratory workflow. Checked while preparing 0.1.0a2; upstream content may change.
+Primary references for rule models, telemetry and the manual laboratory workflow. Checked while preparing 0.1.0a3; upstream content may change.
 
 - [MITRE ATT&CK T1033](https://attack.mitre.org/techniques/T1033/)
 - [MITRE ATT&CK T1082](https://attack.mitre.org/techniques/T1082/)
