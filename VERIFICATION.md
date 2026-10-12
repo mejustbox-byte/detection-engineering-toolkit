@@ -2,9 +2,13 @@
 
 ## 0.1.0a3
 
+Readiness 0.1.0a3: hosted CI 38242771951 на de50f7da3e2038e7538dea693a0fa7be2de3a382 прошёл Linux/Windows/macOS: 54 теста, Ruff, doctor, build, bundle/integrity, 11 пар readiness-документов и чистая установка wheel. Дополнительно введена несовместимость сравнения при смене политики возраста; финальный CI проверяет этот коммит отдельно.
+
+## 0.1.0a2
+
 Локальный Linux цикл: 31 тест, Ruff lint/format, doctor, внешняя Sigma конвертация и проверка ссылок — pass. Чистая установка wheel вне checkout: doctor и четыре bundle/integrity процесса — pass.
 
-[CI для реализации 0.1.0a3](https://github.com/mejustbox-byte/detection-engineering-toolkit/actions/runs/37956459675) прошёл на Windows и Linux для commit `591dbdbd656f5143933c8397f517dbe5b9cb40d5`: по 31 тесту, lint/format, doctor, build, bundle/integrity и wheel install вне checkout. Для финального merge commit и release проверяйте отдельные запуски Actions; результат другого SHA не заменяет эту проверку.
+[CI для реализации 0.1.0a2](https://github.com/mejustbox-byte/detection-engineering-toolkit/actions/runs/37956459675) прошёл на Windows и Linux для commit `591dbdbd656f5143933c8397f517dbe5b9cb40d5`: по 31 тесту, lint/format, doctor, build, bundle/integrity и wheel install вне checkout. Для финального merge commit и release проверяйте отдельные запуски Actions; результат другого SHA не заменяет эту проверку.
 
 ## Опубликованная базовая версия 0.1.0a1
 
@@ -15,6 +19,6 @@
 
 ## Не выполнено
 
-Реальные Windows VM тесты с upstream Atomic; доставка и match в Splunk/Defender; cleanup реального теста; полная проверка macOS; full dependency/CVE audit. Соответствующие результаты остаются `not_run`, даже при зелёном offline CI.
+Реальные Windows VM тесты с upstream Atomic; доставка и match в Splunk/Defender; cleanup реального теста; full dependency/CVE audit. Соответствующие результаты остаются `not_run`, даже при зелёном offline CI.
 
 Разделение уровней описано в [VALIDATION.md](VALIDATION.md). Лабораторные свидетельства должны содержать версии, UTC время и результат каждого этапа.

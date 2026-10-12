@@ -2,9 +2,13 @@
 
 ## 0.1.0a3
 
+Readiness 0.1.0a3: hosted CI 38242771951 on de50f7da3e2038e7538dea693a0fa7be2de3a382 passed Linux/Windows/macOS: 54 tests, Ruff, doctor, build, bundle/integrity, eleven readiness guide pairs and clean wheel installation. A further comparison guard records changed delivery-age policy; final CI verifies that commit separately.
+
+## 0.1.0a2
+
 Local Linux checks passed: 31 tests, Ruff lint/format, doctor, external Sigma conversion and documentation links. Clean wheel installation outside the checkout passed doctor and all four bundle/integrity workflows.
 
-[Implementation CI for 0.1.0a3](https://github.com/mejustbox-byte/detection-engineering-toolkit/actions/runs/37956459675) passed on Windows and Linux for commit `591dbdbd656f5143933c8397f517dbe5b9cb40d5`: 31 tests per OS, lint/format, doctor, build, bundle/integrity and wheel installation outside the checkout. Check separate Actions runs for the final merge commit and release; evidence from a different SHA does not replace that check.
+[Implementation CI for 0.1.0a2](https://github.com/mejustbox-byte/detection-engineering-toolkit/actions/runs/37956459675) passed on Windows and Linux for commit `591dbdbd656f5143933c8397f517dbe5b9cb40d5`: 31 tests per OS, lint/format, doctor, build, bundle/integrity and wheel installation outside the checkout. Check separate Actions runs for the final merge commit and release; evidence from a different SHA does not replace that check.
 
 ## Published baseline 0.1.0a1
 
@@ -15,6 +19,6 @@ Local Linux checks passed: 31 tests, Ruff lint/format, doctor, external Sigma co
 
 ## Not run
 
-Real Windows VM tests with upstream Atomic; Splunk/Defender delivery and query matches; real test cleanup; full macOS validation; full dependency/CVE audit. These remain `not_run` even when offline CI is green.
+Real Windows VM tests with upstream Atomic; Splunk/Defender delivery and query matches; real test cleanup; full dependency/CVE audit. These remain `not_run` even when offline CI is green.
 
 Evidence levels are described in [VALIDATION.md](VALIDATION.md). Lab evidence should include versions, UTC timestamps and each stage's result.

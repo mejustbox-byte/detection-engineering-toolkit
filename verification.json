@@ -1,0 +1,20 @@
+{
+  "version": "0.1.0a3",
+  "baseline_tests": 31,
+  "test_count": 55,
+  "readiness_documentation_pairs": 11,
+  "hosted_ci": {
+    "run_id": 38242771951,
+    "commit": "de50f7da3e2038e7538dea693a0fa7be2de3a382",
+    "tests": 54,
+    "platforms": [
+      "Linux",
+      "Windows",
+      "macOS"
+    ],
+    "status": "passed_before_policy_guard"
+  },
+  "sigma_execution": "not_run",
+  "siem_execution": "not_run",
+  "atomic_execution": "not_run"
+}

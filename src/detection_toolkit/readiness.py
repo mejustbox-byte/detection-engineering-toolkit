@@ -157,7 +157,7 @@ def assess(data, observed_at, max_chains=100, maximum_age_days=30):
     assessment = make_report(
         "detection-engineering-toolkit",
         __version__,
-        "readiness-1.0",
+        f"readiness-1.0-age-{maximum_age_days}d",
         data["scope"],
         observed_at,
         data["synthetic"],

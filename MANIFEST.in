@@ -4,3 +4,5 @@ recursive-include scripts *.sh *.ps1 *.py
 recursive-include tests *.py
 recursive-include .github/workflows *.yml
 recursive-include examples *.yml *.json
+
+include verification.json

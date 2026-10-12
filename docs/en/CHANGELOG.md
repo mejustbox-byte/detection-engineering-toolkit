@@ -2,7 +2,7 @@
 
 ## 0.1.0a3
 
-Three Readiness chains on existing APIs, strict import and opsec-1.0 assessment, separate SIEM-delivery assertions and eleven RU/EN guides. Local suite: 54 tests; CI adds macOS.
+Three Readiness chains on existing APIs, strict import and opsec-1.0 assessment, separate SIEM-delivery assertions and eleven RU/EN guides. Local suite: 55 tests; CI adds macOS.
 
 ## 0.1.0a2
 

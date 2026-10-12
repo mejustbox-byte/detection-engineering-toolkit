@@ -5,3 +5,5 @@ DET-004 is evaluated independently from fixture and conversion success. verified
 The toolkit does not access SIEM logs, validate an execution ID or authenticate this assertion. The catalog always labels provenance user_supplied_unverified. A verified assertion passing these consistency checks is not independently verified delivery. not_run/unknown and incomplete verified records stay not_tested. Failed delivery remains fail even with absent metadata.
 
 [Index](index.md)
+
+The maximum delivery-age policy is part of the assessment ruleset identifier. Report-contract comparison rejects differing policies instead of interpreting their changed results as fixes.

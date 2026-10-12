@@ -3,7 +3,7 @@ import hashlib
 import json
 
 import pytest
-from opsec_reports.core import ReportError, outcome
+from opsec_reports.core import ReportError, compare, outcome
 
 from detection_toolkit.cli import main
 from detection_toolkit.core import InputError, fixture_cases, generate_rule, scenario_for
@@ -187,3 +187,9 @@ def test_cli_strict_json_no_echo(tmp_path, capsys):
         == 3
     )
     assert "SENSITIVE_MARKER" not in capsys.readouterr().err
+
+
+def test_different_delivery_age_policy_is_not_comparable():
+    before = assess(fixture(), NOW, maximum_age_days=30)["assessment"]
+    after = assess(fixture(), NOW, maximum_age_days=90)["assessment"]
+    assert not compare(before, after)["comparable"]
