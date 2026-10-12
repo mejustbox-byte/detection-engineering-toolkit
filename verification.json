@@ -4,15 +4,15 @@
   "test_count": 55,
   "readiness_documentation_pairs": 11,
   "hosted_ci": {
-    "run_id": 38242771951,
-    "commit": "de50f7da3e2038e7538dea693a0fa7be2de3a382",
-    "tests": 54,
+    "run_id": 38243279691,
+    "commit": "25149ae4b32c3dcdb84d2ec94c3076640560cb41",
+    "tests": 55,
     "platforms": [
       "Linux",
       "Windows",
       "macOS"
     ],
-    "status": "passed_before_policy_guard"
+    "status": "passed"
   },
   "sigma_execution": "not_run",
   "siem_execution": "not_run",

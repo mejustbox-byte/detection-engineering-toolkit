@@ -2,7 +2,7 @@
 
 ## 0.1.0a3
 
-Readiness 0.1.0a3: hosted CI 38242771951 на de50f7da3e2038e7538dea693a0fa7be2de3a382 прошёл Linux/Windows/macOS: 54 теста, Ruff, doctor, build, bundle/integrity, 11 пар readiness-документов и чистая установка wheel. Дополнительно введена несовместимость сравнения при смене политики возраста; финальный CI проверяет этот коммит отдельно.
+Hosted CI 38243279691 на 25149ae4b32c3dcdb84d2ec94c3076640560cb41 прошёл Linux/Windows/macOS: 55 тестов, Ruff, doctor, build, bundle/integrity, 11 пар readiness-документов и чистая установка wheel с readiness и валидацией assessment. Смена политики давности делает сравнение несовместимым. Финальный commit/release имеет отдельные Actions; другой SHA не заменяет его проверку.
 
 ## 0.1.0a2
 

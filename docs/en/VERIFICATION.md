@@ -2,7 +2,7 @@
 
 ## 0.1.0a3
 
-Readiness 0.1.0a3: hosted CI 38242771951 on de50f7da3e2038e7538dea693a0fa7be2de3a382 passed Linux/Windows/macOS: 54 tests, Ruff, doctor, build, bundle/integrity, eleven readiness guide pairs and clean wheel installation. A further comparison guard records changed delivery-age policy; final CI verifies that commit separately.
+Hosted CI 38243279691 on 25149ae4b32c3dcdb84d2ec94c3076640560cb41 passed Linux/Windows/macOS: 55 tests, Ruff, doctor, build, bundle/integrity, eleven readiness guide pairs and clean wheel installation with readiness and assessment validation. Changed delivery-age policy makes comparisons incompatible. Final commit/release has separate Actions; a different SHA does not replace that verification.
 
 ## 0.1.0a2
 
