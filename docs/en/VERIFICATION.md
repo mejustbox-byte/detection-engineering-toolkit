@@ -1,5 +1,9 @@
 # Verification status
 
+## 0.1.0a3
+
+Hosted CI 38243279691 on 25149ae4b32c3dcdb84d2ec94c3076640560cb41 passed Linux/Windows/macOS: 55 tests, Ruff, doctor, build, bundle/integrity, eleven readiness guide pairs and clean wheel installation with readiness and assessment validation. Changed delivery-age policy makes comparisons incompatible. Final commit/release has separate Actions; a different SHA does not replace that verification.
+
 ## 0.1.0a2
 
 Local Linux checks passed: 31 tests, Ruff lint/format, doctor, external Sigma conversion and documentation links. Clean wheel installation outside the checkout passed doctor and all four bundle/integrity workflows.
@@ -15,6 +19,6 @@ Local Linux checks passed: 31 tests, Ruff lint/format, doctor, external Sigma co
 
 ## Not run
 
-Real Windows VM tests with upstream Atomic; Splunk/Defender delivery and query matches; real test cleanup; full macOS validation; full dependency/CVE audit. These remain `not_run` even when offline CI is green.
+Real Windows VM tests with upstream Atomic; Splunk/Defender delivery and query matches; real test cleanup; full dependency/CVE audit. These remain `not_run` even when offline CI is green.
 
 Evidence levels are described in [VALIDATION.md](VALIDATION.md). Lab evidence should include versions, UTC timestamps and each stage's result.

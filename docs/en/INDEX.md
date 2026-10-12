@@ -20,7 +20,9 @@
 - [Roadmap](ROADMAP.md)
 - [Release process](RELEASE.md)
 - [Release checklist](RELEASE-CHECKLIST.md)
-- [Detection Engineering Toolkit 0.1.0a2](RELEASE-NOTES.md)
+- [Detection Engineering Toolkit 0.1.0a3](RELEASE-NOTES.md)
 - [Changelog](CHANGELOG.md)
 - [Sources](SOURCES.md)
 - [ADR 0001: Deterministic offline CLI](adr/0001-deterministic-offline.md)
+
+[Detection Readiness](readiness/index.md)

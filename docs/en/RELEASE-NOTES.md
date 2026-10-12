@@ -1,30 +1,17 @@
-# Detection Engineering Toolkit 0.1.0a2
+# Detection Engineering Toolkit 0.1.0a3 — Detection Readiness
 
 ## English
 
-Working offline workflows and complete documentation in two languages.
+Detection Readiness extends the existing toolkit with three risk/telemetry/rule/test chains for T1033, T1082 and T1016. Adds strict readiness-1.0 JSON, four checks, an opsec-1.0 assessment and separate chain catalog. Sigma generation, Splunk/Defender conversion and predicate validation reuse the existing APIs.
 
-- `doctor` checks installed catalogue, dependencies and both backends.
-- `convert-file` converts external local Sigma YAML into Splunk SPL/Defender KQL.
-- `verify-bundle` checks SHA256, missing/extra files and the manifest allowlist.
-- Atomic uses one parse/hash snapshot, retains cleanup, checks metadata types and records an optional upstream commit (unverified).
-- Bilingual READMEs, technical documents, CLI reference and lab protocol; REPORT includes Russian and English text.
-- 31 regression tests; Windows/Linux CI adds wheel installation outside checkout, doctor and integrity smoke.
+Local verification passed 55 tests (including the existing 31), Ruff and clean wheel installation with doctor/bundle/readiness/assessment validation. Eleven RU/EN readiness documentation pairs were added. Hosted CI 38243279691 passed Linux, Windows and macOS on 25149ae4b32c3dcdb84d2ec94c3076640560cb41: 55 tests and clean installation.
 
-The four built-in Discovery scenarios remain experimental/low. Offline predicates do not execute Sigma/SIEM. Real Windows VM, upstream Atomic, Splunk/Defender query validation, full macOS validation and dependency/CVE audit remain not_run. No full ATT&CK catalogue, automatic runner or SIEM API. This is a prerelease.
-
-
-
+The synthetic example retains delivery not_run and returns code 2. DET-004 checks only consistency of a supplied assertion: execution ID, time and rule hash; provenance is always user_supplied_unverified. Predicate testing does not execute Sigma, SIEM or Atomic. Real Windows VM/SIEM/Atomic and dependency/CVE auditing were not performed. This alpha is not production-ready.
 
 ## Русский
 
-Рабочие offline процессы и полная документация на двух языках.
+Detection Readiness расширяет существующий toolkit: три цепочки риск/telemetry/правило/тест для T1033, T1082 и T1016. Добавлены строгий readiness-1.0 JSON, четыре контроля, opsec-1.0 assessment и отдельный каталог цепочек. Генерация Sigma, конвертация Splunk/Defender и проверка предиката используют прежние API.
 
-- `doctor`: проверка установленного каталога, зависимостей и обоих backend.
-- `convert-file`: конвертация локального внешнего Sigma YAML в Splunk SPL/Defender KQL.
-- `verify-bundle`: проверка SHA256, отсутствующих/лишних файлов и allowlist manifest.
-- Atomic: parse/hash одного снимка, сохранение cleanup, строгие типы metadata и optional upstream commit (непроверенный).
-- Двуязычные README, технические документы, справочник CLI и лабораторный протокол; REPORT содержит русский и английский текст.
-- 31 regression тест; CI Windows/Linux дополнен wheel install вне checkout, doctor и integrity smoke.
+Локально прошли 55 теста (включая прежние 31), Ruff и чистая установка wheel с doctor/bundle/readiness/валидацией assessment. Добавлены 11 пар RU/EN readiness-документов. Hosted CI 38243279691 прошёл Linux, Windows и macOS на 25149ae4b32c3dcdb84d2ec94c3076640560cb41: 55 тестов и чистая установка.
 
-Четыре встроенных Discovery сценария сохраняют статус experimental/low. Offline predicate не выполняет Sigma/SIEM. Real Windows VM, upstream Atomic, Splunk/Defender query validation, полный macOS цикл и dependency/CVE audit остаются not_run. Полный ATT&CK каталог, automatic runner и SIEM API отсутствуют. Выпуск — prerelease.
+Синтетический пример сохраняет delivery not_run и возвращает код 2. DET-004 проверяет только согласованность предоставленного заявления: ID исполнения, время и хеш правила; provenance всегда user_supplied_unverified. Предикат не исполняет Sigma, SIEM или Atomic. Реальные Windows VM/SIEM/Atomic и dependency/CVE audit не выполнены. Alpha не готова для production.

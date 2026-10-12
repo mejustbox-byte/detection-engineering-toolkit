@@ -3,7 +3,7 @@
 | Milestone | Outcome | Status |
 |---|---|---|
 | Offline MVP | Four scenarios, Sigma, SPL/KQL, cases, Atomic plan | Implemented in 0.1.0a1 |
-| Working workflows | doctor, external Sigma, integrity, snapshot provenance, RU/EN | Implemented in 0.1.0a2 |
+| Working workflows | doctor, external Sigma, integrity, snapshot provenance, RU/EN | Implemented in 0.1.0a3 |
 | Laboratory validation | Windows VM, real Atomic GUIDs, delivery and matches in both SIEMs | Not run |
 | Operational suitability | Deployment tuning, false-positive baseline, data-source profiles | Planned |
 | Catalogue expansion | More specific scenarios and ATT&CK dataset provenance | Planned |

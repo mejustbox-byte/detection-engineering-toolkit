@@ -39,3 +39,7 @@ uv run --frozen detkit atomic-plan T1033 --atomic-file /path/to/atomics/T1033/T1
 `0`: successful processing or a passing check. `1`: labelled-case or package-integrity failure. `2`: argument, read, parse or conversion error. `doctor` does not test SIEM/API/Windows infrastructure. `verify-bundle` checks integrity, not signatures or detection quality.
 
 See [CORE-CONTRACT.md](CORE-CONTRACT.md) for the event format and exact limits.
+
+## Detection Readiness
+
+The new readiness command has separate assessment codes: 0 complete without failures, 1 failure, 2 incomplete evidence, 3 invalid readiness input/output. Argparse usage errors remain 2. Earlier commands retain their codes. The wrapper contains an opsec-1.0 assessment and separate catalog; predicate/Sigma-conversion/SIEM-delivery are distinct. See the [guide](readiness/user-guide.md).

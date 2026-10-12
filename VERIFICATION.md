@@ -1,5 +1,9 @@
 # Состояние проверок
 
+## 0.1.0a3
+
+Hosted CI 38243279691 на 25149ae4b32c3dcdb84d2ec94c3076640560cb41 прошёл Linux/Windows/macOS: 55 тестов, Ruff, doctor, build, bundle/integrity, 11 пар readiness-документов и чистая установка wheel с readiness и валидацией assessment. Смена политики давности делает сравнение несовместимым. Финальный commit/release имеет отдельные Actions; другой SHA не заменяет его проверку.
+
 ## 0.1.0a2
 
 Локальный Linux цикл: 31 тест, Ruff lint/format, doctor, внешняя Sigma конвертация и проверка ссылок — pass. Чистая установка wheel вне checkout: doctor и четыре bundle/integrity процесса — pass.
@@ -15,6 +19,6 @@
 
 ## Не выполнено
 
-Реальные Windows VM тесты с upstream Atomic; доставка и match в Splunk/Defender; cleanup реального теста; полная проверка macOS; full dependency/CVE audit. Соответствующие результаты остаются `not_run`, даже при зелёном offline CI.
+Реальные Windows VM тесты с upstream Atomic; доставка и match в Splunk/Defender; cleanup реального теста; full dependency/CVE audit. Соответствующие результаты остаются `not_run`, даже при зелёном offline CI.
 
 Разделение уровней описано в [VALIDATION.md](VALIDATION.md). Лабораторные свидетельства должны содержать версии, UTC время и результат каждого этапа.

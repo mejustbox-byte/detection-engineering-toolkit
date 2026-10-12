@@ -22,7 +22,7 @@ Download the wheel and `SHA256SUMS` from the same GitHub Release. Verify the SHA
 ```bash
 python -m venv .venv
 # Linux/macOS
-.venv/bin/python -m pip install detection_engineering_toolkit-0.1.0a2-py3-none-any.whl
+.venv/bin/python -m pip install detection_engineering_toolkit-0.1.0a3-py3-none-any.whl
 .venv/bin/detkit doctor
 ```
 

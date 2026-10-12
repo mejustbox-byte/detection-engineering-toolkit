@@ -4,11 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "detection-engineering-toolkit"
-version = "0.1.0a2"
+version = "0.1.0a3"
 readme = "README.md"
 description = "Reproducible detection engineering: ATT&CK scenarios, Sigma, SIEM queries and Atomic test plans"
 requires-python = ">=3.12"
-dependencies = ["pysigma==1.5.1", "pysigma-backend-splunk==2.1.0", "pysigma-backend-microsoft365defender==0.3.2", "PyYAML==6.0.3"]
+dependencies = ["pysigma==1.5.1", "pysigma-backend-splunk==2.1.0", "pysigma-backend-microsoft365defender==0.3.2", "PyYAML==6.0.3", "opsec-report-contract @ https://github.com/mejustbox-byte/opsec-report-contract/releases/download/v0.1.0a1/opsec_report_contract-0.1.0a1-py3-none-any.whl#sha256=0075f62d9a99172d24c56882192cc53d547546b60eb9d863bfb1041213c0bd94"]
 
 [project.scripts]
 detkit = "detection_toolkit.cli:main"
