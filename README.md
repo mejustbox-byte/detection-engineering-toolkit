@@ -52,7 +52,7 @@ uv run --frozen detkit convert-file output/whoami/rule.yml --target defender
 
 ## Product status
 
-Version **0.1.0a3**, prerelease. The offline CLI is implemented and tested. Predicate validation does not execute Sigma or a SIEM query. Conversion does not establish telemetry delivery or detection in a particular SIEM. Real Windows VM, upstream Atomic and SIEM validation are **not run**. Follow the [lab guide](docs/en/LOCAL-PC.md) to collect that evidence.
+Version **0.1.0a4**, prerelease. The offline CLI is implemented and tested. Predicate validation does not execute Sigma or a SIEM query. Conversion does not establish telemetry delivery or detection in a particular SIEM. Real Windows VM, upstream Atomic and SIEM validation are **not run**. Follow the [lab guide](docs/en/LOCAL-PC.md) to collect that evidence.
 
 Built for practical detection engineering in 2026: reproducible artifacts, recorded input provenance and clearly scoped results. No independent ranking, market leadership or production-ready status is claimed.
 
@@ -65,3 +65,5 @@ Built for practical detection engineering in 2026: reproducible artifacts, recor
 Three risk/telemetry/rule/test chains reuse the existing toolkit APIs. Readiness keeps offline predicate and SIEM-delivery assertions separate. Default synthetic cases return incomplete coverage. See the guide for exact evidence limits.
 
 [Readiness documentation](docs/en/readiness/index.md)
+
+[Windows 4688 laboratory kit](docs/en/lab/README.md) — alpha, offline import; SIEM delivery not tested.

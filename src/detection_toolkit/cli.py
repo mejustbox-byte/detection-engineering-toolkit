@@ -25,6 +25,7 @@ from .core import (
     validate_cases,
     verify_bundle,
 )
+from .lab_import import normalize as normalize_lab
 from .readiness import assess as readiness_assess
 
 
@@ -32,6 +33,17 @@ def parser():
     root = argparse.ArgumentParser(description="ATT&CK → Sigma → SIEM → план Atomic")
     root.add_argument("--version", action="version", version=__version__)
     commands = root.add_subparsers(dest="command", required=True)
+    importer = commands.add_parser(
+        "lab-import", help="Validate operator-supplied Windows lab events"
+    )
+    importer.add_argument("path", type=Path)
+    importer.add_argument("--output", type=Path, required=True)
+    lab_check = commands.add_parser(
+        "lab-check", help="Import and assess Windows lab events offline"
+    )
+    lab_check.add_argument("path", type=Path)
+    lab_check.add_argument("--output", type=Path, required=True)
+    lab_check.add_argument("--observed-at", required=True)
     ready = commands.add_parser("readiness", help="Assess offline risk/telemetry/test chains")
     ready.add_argument("path", type=Path)
     ready.add_argument("--observed-at", required=True)
@@ -75,6 +87,16 @@ def main(argv=None):
             stream.reconfigure(encoding="utf-8")
     args = parser().parse_args(argv)
     try:
+        if args.command == "lab-check":
+            result = readiness_assess(normalize_lab(strict_load(args.path)), args.observed_at)
+            write_new(args.output, json.dumps(result, ensure_ascii=False, indent=2) + "\n")
+            print("lab_assessment_written; siem_delivery=not_run")
+            return outcome(result["assessment"])
+        if args.command == "lab-import":
+            result = normalize_lab(strict_load(args.path))
+            write_new(args.output, json.dumps(result, ensure_ascii=False, indent=2) + "\n")
+            print("lab_manifest_normalized; siem_delivery=not_run")
+            return 0
         if args.command == "readiness":
             result = readiness_assess(
                 strict_load(args.path), args.observed_at, args.max_chains, args.maximum_age_days
@@ -124,7 +146,7 @@ def main(argv=None):
         print("invalid_readiness_input_or_output", file=sys.stderr)
         return 3
     except (InputError, OSError, SigmaError, RecursionError) as exc:
-        if args.command == "readiness":
+        if args.command in ("readiness", "lab-import", "lab-check"):
             print("readiness_input_or_output_unavailable", file=sys.stderr)
             return 3
         print(f"Ошибка: {exc}", file=sys.stderr)

@@ -22,6 +22,6 @@ Detection engineers create and review rules, SOC analysts check SIEM fields and 
 
 No runtime network, credentials or shell execution. UTF-8 on Windows/Linux. Inputs up to 8 MiB; YAML safe_load. Frozen source installation. RU/EN documentation with the same contract. CI covers both OS and wheel installation outside the checkout. No production or full ATT&CK coverage claim.
 
-## Outside 0.1.0a3
+## Outside 0.1.0a4
 
 A full STIX catalogue, automatic Atomic execution, event delivery, SIEM APIs, correlation rules, tuning against real statistics and cryptographically signed bundles require separate design and evidence.

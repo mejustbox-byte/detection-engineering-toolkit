@@ -52,7 +52,7 @@ uv run --frozen detkit convert-file output/whoami/rule.yml --target defender
 
 ## Состояние продукта
 
-Версия **0.1.0a3**, prerelease. Offline CLI реализован и покрыт тестами. Проверка предиката не исполняет Sigma или SIEM-запрос. Конвертация не доказывает корректную доставку событий или обнаружение в конкретном SIEM. Реальные Windows VM, upstream Atomic и SIEM проверки пока **не выполнены**. Протокол воспроизведения: [LOCAL-PC.md](LOCAL-PC.md).
+Версия **0.1.0a4**, prerelease. Offline CLI реализован и покрыт тестами. Проверка предиката не исполняет Sigma или SIEM-запрос. Конвертация не доказывает корректную доставку событий или обнаружение в конкретном SIEM. Реальные Windows VM, upstream Atomic и SIEM проверки пока **не выполнены**. Протокол воспроизведения: [LOCAL-PC.md](LOCAL-PC.md).
 
 Инструмент разработан для практики detection engineering в 2026 году: воспроизводимые артефакты, проверяемое происхождение входов и чёткое разделение результатов. Независимый рейтинг, лидерство на рынке и production-ready статус не заявляются.
 
@@ -65,3 +65,5 @@ uv run --frozen detkit convert-file output/whoami/rule.yml --target defender
 Три цепочки риск/telemetry/правило/тест используют прежние API. Readiness разделяет автономный предикат и заявления доставки SIEM. Синтетический пример даёт неполное покрытие. Точные ограничения описаны в руководстве.
 
 [Readiness documentation](docs/ru/readiness/index.md)
+
+[Лабораторный комплект Windows 4688](docs/ru/lab/README.md) — alpha; доставка в SIEM не проверена.

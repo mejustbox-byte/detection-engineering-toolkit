@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.0a4
+
+Windows 4688 laboratory collector, explicit synthetic classification, strict import, unified lab-check and 19 new tests. SIEM delivery remains not_run.
+
 ## 0.1.0a3
 
 Three Readiness chains on existing APIs, strict import and opsec-1.0 assessment, separate SIEM-delivery assertions and eleven RU/EN guides. Local suite: 55 tests; CI adds macOS.

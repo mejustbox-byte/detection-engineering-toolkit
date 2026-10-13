@@ -1,17 +1,17 @@
-# Detection Engineering Toolkit 0.1.0a3 — Detection Readiness
-
-## English
-
-Detection Readiness extends the existing toolkit with three risk/telemetry/rule/test chains for T1033, T1082 and T1016. Adds strict readiness-1.0 JSON, four checks, an opsec-1.0 assessment and separate chain catalog. Sigma generation, Splunk/Defender conversion and predicate validation reuse the existing APIs.
-
-Local verification passed 55 tests (including the existing 31), Ruff and clean wheel installation with doctor/bundle/readiness/assessment validation. Eleven RU/EN readiness documentation pairs were added. Hosted CI 38243279691 passed Linux, Windows and macOS on 25149ae4b32c3dcdb84d2ec94c3076640560cb41: 55 tests and clean installation.
-
-The synthetic example retains delivery not_run and returns code 2. DET-004 checks only consistency of a supplied assertion: execution ID, time and rule hash; provenance is always user_supplied_unverified. Predicate testing does not execute Sigma, SIEM or Atomic. Real Windows VM/SIEM/Atomic and dependency/CVE auditing were not performed. This alpha is not production-ready.
+# Detection Engineering Toolkit 0.1.0a4 — Windows laboratory preparation
 
 ## Русский
 
-Detection Readiness расширяет существующий toolkit: три цепочки риск/telemetry/правило/тест для T1033, T1082 и T1016. Добавлены строгий readiness-1.0 JSON, четыре контроля, opsec-1.0 assessment и отдельный каталог цепочек. Генерация Sigma, конвертация Splunk/Defender и проверка предиката используют прежние API.
+Добавлен лабораторный сборщик четырёх процессов и событий Windows Security 4688, строгий windows-lab-1.0 импорт и единый lab-check. Признак synthetic обязателен и сохраняется при оценке; SIEM delivery всегда not_run. Исправлена запись UTF-8 без BOM для PowerShell 5.1. Дублирующиеся PID/ID записей, несогласованные события и заявления о SIEM-доставке отклоняются. Реальные данные оператора не считаются независимо подтверждёнными.
 
-Локально прошли 55 теста (включая прежние 31), Ruff и чистая установка wheel с doctor/bundle/readiness/валидацией assessment. Добавлены 11 пар RU/EN readiness-документов. Hosted CI 38243279691 прошёл Linux, Windows и macOS на 25149ae4b32c3dcdb84d2ec94c3076640560cb41: 55 тестов и чистая установка.
+Linux / Python 3.12.15: 74 теста, Ruff, сборка, чистая установка wheel и проверки документации. Добавлены две пары RU/EN руководств со сбором, откатом политик, приватностью и шаблоном кейса до/после. Windows CI разбирает только синтаксис сборщика. Результат hosted CI для конкретного commit проверяется в Actions.
 
-Синтетический пример сохраняет delivery not_run и возвращает код 2. DET-004 проверяет только согласованность предоставленного заявления: ID исполнения, время и хеш правила; provenance всегда user_supplied_unverified. Предикат не исполняет Sigma, SIEM или Atomic. Реальные Windows VM/SIEM/Atomic и dependency/CVE audit не выполнены. Alpha не готова для production.
+Реальный сбор Windows, доставка/совпадения SIEM, исполнение Sigma/Atomic и CVE-аудит зависимостей не выполнены. Синтетический пример даёт 9 pass / 3 not_tested и код 2. Автоматической настройки политик, загрузки в SIEM или доказательства подлинности здесь нет. Alpha не готова для production.
+
+## English
+
+Adds a four-process Windows Security 4688 laboratory collector, strict windows-lab-1.0 import and unified lab-check. The required synthetic classification is preserved; SIEM delivery always remains not_run. Windows PowerShell 5.1 output uses UTF-8 without BOM. Duplicate PID/record IDs, inconsistent events and claimed SIEM delivery are rejected. Operator-supplied live data is not independently authenticated.
+
+Linux / Python 3.12.15: 74 tests, Ruff, build, clean wheel installation and documentation checks. Two RU/EN guide pairs cover collection, policy rollback, privacy and a before/after case template. Windows CI only parses collector syntax. Consult Actions for hosted CI on the exact commit.
+
+Real Windows collection, SIEM delivery/matching, Sigma/Atomic execution and dependency CVE auditing were not performed. The synthetic example returns 9 pass / 3 not_tested and exit 2. No automatic policy configuration, SIEM upload or authenticity proof is included. This alpha is not production-ready.

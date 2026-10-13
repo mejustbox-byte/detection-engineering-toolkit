@@ -1,0 +1,78 @@
+{
+  "schema_version": "windows-lab-1.0",
+  "synthetic": true,
+  "execution_id": "synthetic-only",
+  "started_at": "2026-10-13T10:00:00Z",
+  "completed_at": "2026-10-13T10:00:10Z",
+  "collection_state": "available",
+  "commands": [
+    {
+      "id": "whoami-positive",
+      "technique": "T1033",
+      "expected": true,
+      "pid": 100,
+      "image": "C:\\Windows\\System32\\whoami.exe",
+      "exit_code": 0
+    },
+    {
+      "id": "hostname-positive",
+      "technique": "T1082",
+      "expected": true,
+      "pid": 101,
+      "image": "C:\\Windows\\System32\\hostname.exe",
+      "exit_code": 0
+    },
+    {
+      "id": "ipconfig-positive",
+      "technique": "T1016",
+      "expected": true,
+      "pid": 102,
+      "image": "C:\\Windows\\System32\\ipconfig.exe",
+      "exit_code": 0
+    },
+    {
+      "id": "other-process-negative",
+      "technique": "T1033",
+      "expected": false,
+      "pid": 103,
+      "image": "C:\\Windows\\System32\\cmd.exe",
+      "exit_code": 0
+    }
+  ],
+  "events": [
+    {
+      "case_id": "whoami-positive",
+      "record_id": 100,
+      "observed_at": "2026-10-13T10:00:05Z",
+      "process_id": 100,
+      "Image": "C:\\Windows\\System32\\whoami.exe",
+      "CommandLine": "C:\\Windows\\System32\\whoami.exe"
+    },
+    {
+      "case_id": "hostname-positive",
+      "record_id": 101,
+      "observed_at": "2026-10-13T10:00:05Z",
+      "process_id": 101,
+      "Image": "C:\\Windows\\System32\\hostname.exe",
+      "CommandLine": "C:\\Windows\\System32\\hostname.exe"
+    },
+    {
+      "case_id": "ipconfig-positive",
+      "record_id": 102,
+      "observed_at": "2026-10-13T10:00:05Z",
+      "process_id": 102,
+      "Image": "C:\\Windows\\System32\\ipconfig.exe",
+      "CommandLine": "C:\\Windows\\System32\\ipconfig.exe /all"
+    },
+    {
+      "case_id": "other-process-negative",
+      "record_id": 103,
+      "observed_at": "2026-10-13T10:00:05Z",
+      "process_id": 103,
+      "Image": "C:\\Windows\\System32\\cmd.exe",
+      "CommandLine": "C:\\Windows\\System32\\cmd.exe"
+    }
+  ],
+  "siem_delivery": "not_run",
+  "provenance": "operator_supplied_unverified"
+}

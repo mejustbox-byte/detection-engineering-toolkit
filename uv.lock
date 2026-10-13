@@ -176,7 +176,7 @@ wheels = [
 
 [[package]]
 name = "detection-engineering-toolkit"
-version = "0.1.0a3"
+version = "0.1.0a4"
 source = { editable = "." }
 dependencies = [
     { name = "opsec-report-contract" },
