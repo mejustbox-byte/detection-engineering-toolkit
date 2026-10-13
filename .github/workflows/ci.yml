@@ -26,6 +26,11 @@ jobs:
       - run: uv run --frozen detkit bundle T1033 --output output/smoke
       - run: uv run --frozen detkit verify-bundle output/smoke
       - run: uv run --frozen python scripts/check_readiness_docs.py
+      - run: uv run --frozen python scripts/check_lab_docs.py
+      - name: Parse collector syntax without executing it
+        if: runner.os == 'Windows'
+        shell: powershell
+        run: ./scripts/check_lab_parser.ps1
       - name: Install wheel outside checkout
         run: uv run --frozen python scripts/verify_readiness_install.py
       - uses: actions/upload-artifact@v7

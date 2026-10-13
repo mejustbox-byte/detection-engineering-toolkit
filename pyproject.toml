@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "detection-engineering-toolkit"
-version = "0.1.0a3"
+version = "0.1.0a4"
 readme = "README.md"
 description = "Reproducible detection engineering: ATT&CK scenarios, Sigma, SIEM queries and Atomic test plans"
 requires-python = ">=3.12"

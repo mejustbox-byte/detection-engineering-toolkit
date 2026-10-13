@@ -1,5 +1,9 @@
 # Verification status
 
+## 0.1.0a4
+
+Local Linux / Python 3.12.15: 74 tests, Ruff, build and wheel installation, 11 readiness and 2 laboratory documentation pairs. Check Actions separately for the new commit hosted CI. The Windows collector and real SIEM delivery were not executed.
+
 ## 0.1.0a3
 
 Hosted CI 38243279691 on 25149ae4b32c3dcdb84d2ec94c3076640560cb41 passed Linux/Windows/macOS: 55 tests, Ruff, doctor, build, bundle/integrity, eleven readiness guide pairs and clean wheel installation with readiness and assessment validation. Changed delivery-age policy makes comparisons incompatible. Final commit/release has separate Actions; a different SHA does not replace that verification.

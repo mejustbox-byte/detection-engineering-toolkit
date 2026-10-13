@@ -2,11 +2,13 @@ import json
 import os
 import subprocess
 import tempfile
+import tomllib
 import venv
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-wheel = next((ROOT / "dist").glob("*.whl"))
+version = tomllib.loads((ROOT / "pyproject.toml").read_text())["project"]["version"]
+wheel = ROOT / "dist" / f"detection_engineering_toolkit-{version}-py3-none-any.whl"
 
 
 def run(args, cwd, expected=0):
@@ -42,6 +44,19 @@ with tempfile.TemporaryDirectory() as directory:
     report = json.loads(out.read_text(encoding="utf-8"))
     assert report["assessment"]["summary"]["not_tested"] == 3
     assert len(report["chains"]) == 3
+    run(
+        cli
+        + [
+            "lab-check",
+            str(ROOT / "examples/windows-lab.synthetic.json"),
+            "--observed-at",
+            "2026-10-13T10:00:20Z",
+            "--output",
+            str(temp / "lab.json"),
+        ],
+        temp,
+        2,
+    )
     assessment = temp / "assessment.json"
     assessment.write_text(json.dumps(report["assessment"]), encoding="utf-8")
     run([str(python), "-m", "opsec_reports", "validate", str(assessment)], temp, 2)

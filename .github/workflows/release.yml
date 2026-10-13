@@ -8,7 +8,7 @@ on:
       tag:
         description: 'New prerelease tag matching the package version'
         required: true
-        default: v0.1.0a3
+        default: v0.1.0a4
 permissions:
   contents: read
 concurrency:
@@ -48,6 +48,7 @@ jobs:
       - run: uv run --frozen detkit doctor
       - run: uv build
       - run: uv run --frozen python scripts/check_readiness_docs.py
+      - run: uv run --frozen python scripts/check_lab_docs.py
       - name: Install wheel outside checkout
         run: uv run --frozen python scripts/verify_readiness_install.py
       - name: Archive and checksums

@@ -7,3 +7,6 @@ dist/
 build/
 output/
 *.bundle
+
+# Private laboratory output
+lab-output/

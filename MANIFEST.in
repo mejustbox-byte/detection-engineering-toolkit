@@ -6,3 +6,5 @@ recursive-include .github/workflows *.yml
 recursive-include examples *.yml *.json
 
 include verification.json
+
+recursive-include lab *.ps1 *.md

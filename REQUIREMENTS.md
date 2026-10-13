@@ -22,6 +22,6 @@ Detection engineer создаёт и ревьюит правило, SOC пров
 
 Runtime без сети, credentials и shell execution. UTF-8 на Windows/Linux. Входы до 8 MiB; YAML safe_load. Frozen source install. Документация RU/EN с одинаковым контрактом. CI проверяет оба OS и установку wheel вне checkout. Нет production или полного ATT&CK coverage claim.
 
-## За границами 0.1.0a3
+## За границами 0.1.0a4
 
 Полный STIX каталог, автоматическое выполнение Atomic, доставка событий, SIEM API, correlation rules, tuning по реальной статистике и криптографическая подпись bundles. Эти функции требуют отдельного проектирования и доказательств.

@@ -20,7 +20,7 @@
 - [План развития](../../ROADMAP.md)
 - [Процесс выпуска](../../RELEASE.md)
 - [Чеклист выпуска](../../RELEASE-CHECKLIST.md)
-- [Detection Engineering Toolkit 0.1.0a3](../../RELEASE-NOTES.md)
+- [Detection Engineering Toolkit 0.1.0a4](../../RELEASE-NOTES.md)
 - [История изменений](../../CHANGELOG.md)
 - [Источники](../../SOURCES.md)
 - [ADR 0001: Детерминированный offline CLI](../adr/0001-deterministic-offline.md)

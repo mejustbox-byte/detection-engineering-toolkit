@@ -1,19 +1,14 @@
 {
-  "version": "0.1.0a3",
-  "baseline_tests": 31,
-  "test_count": 55,
+  "version": "0.1.0a4",
+  "test_count": 74,
   "readiness_documentation_pairs": 11,
+  "lab_documentation_pairs": 2,
+  "local_platform": "Linux",
+  "local_python": "3.12.15",
   "hosted_ci": {
-    "run_id": 38243279691,
-    "commit": "25149ae4b32c3dcdb84d2ec94c3076640560cb41",
-    "tests": 55,
-    "platforms": [
-      "Linux",
-      "Windows",
-      "macOS"
-    ],
-    "status": "passed"
+    "status": "consult_actions_for_exact_commit"
   },
+  "windows_collection": "not_run",
   "sigma_execution": "not_run",
   "siem_execution": "not_run",
   "atomic_execution": "not_run"

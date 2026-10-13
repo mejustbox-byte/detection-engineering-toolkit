@@ -1,5 +1,9 @@
 # Состояние проверок
 
+## 0.1.0a4
+
+Локально на Linux / Python 3.12.15: 74 теста, Ruff, сборка и установка wheel, 11 readiness и 2 лабораторные пары документов. Hosted CI для нового commit проверяйте отдельно в Actions. Windows-сборщик и реальная SIEM-доставка не запускались.
+
 ## 0.1.0a3
 
 Hosted CI 38243279691 на 25149ae4b32c3dcdb84d2ec94c3076640560cb41 прошёл Linux/Windows/macOS: 55 тестов, Ruff, doctor, build, bundle/integrity, 11 пар readiness-документов и чистая установка wheel с readiness и валидацией assessment. Смена политики давности делает сравнение несовместимым. Финальный commit/release имеет отдельные Actions; другой SHA не заменяет его проверку.
